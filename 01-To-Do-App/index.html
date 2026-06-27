@@ -28,8 +28,17 @@
     </div>
     <div class="border p-3">
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search Task" />
-        <button class="btn btn-outline-primary" type="button">Search</button>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search Task"
+          id="Input-Action"
+        />
+        <select id="Input-Select" class="form-select" style="max-width: 150px">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="done">Done</option>
+        </select>
       </div>
       <table class="table">
         <thead>

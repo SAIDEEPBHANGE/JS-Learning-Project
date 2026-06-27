@@ -25,16 +25,14 @@ function disableRow(tr) {
   });
   tr.classList.add("table-success");
 }
-function loadTable() {
+function loadTable(tasksToRender = Tasks) {
   tbody.innerHTML = "";
-  Tasks.forEach((Task) => {
+  tasksToRender.forEach((Task) => {
     const tr = document.createElement("tr");
     tr.dataset.id = Task.Id;
     tr.draggable = true;
-    // ID
     const tdId = document.createElement("td");
     tdId.innerText = Task.Id;
-    // Name
     const tdName = document.createElement("td");
     const span = document.createElement("span");
     span.innerText = Task.TaskTitle;
@@ -43,7 +41,6 @@ function loadTable() {
     input.value = Task.TaskTitle;
     input.className = "form-control d-none";
     tdName.append(span, input);
-    // Status
     const tdStatus = document.createElement("td");
     const badge = document.createElement("span");
     badge.innerText = Task.Status;
@@ -52,30 +49,24 @@ function loadTable() {
         ? "badge bg-success"
         : "badge bg-warning text-dark";
     tdStatus.appendChild(badge);
-    // Buttons
     const tdAction = document.createElement("td");
     const group = document.createElement("div");
     group.className = "btn-group";
     const doneBtn = document.createElement("button");
-    doneBtn.id = "Done-Task";
+    doneBtn.className = "btn btn-success Action Done-Task";
     doneBtn.innerText = "Done";
-    doneBtn.className = "btn btn-success Action";
     const editBtn = document.createElement("button");
-    editBtn.id = "Edit-Task";
+    editBtn.className = "btn btn-warning Action Edit-Task";
     editBtn.innerText = "Edit";
-    editBtn.className = "btn btn-warning Action";
     const saveBtn = document.createElement("button");
-    saveBtn.id = "Save-Edit";
+    saveBtn.className = "btn btn-info Edit CancelEdit d-none Save-Edit";
     saveBtn.innerText = "Save";
-    saveBtn.className = "btn btn-info Edit d-none";
     const cancelBtn = document.createElement("button");
-    cancelBtn.id = "CancelEdit";
+    cancelBtn.className = "btn btn-secondary Edit d-none Cancel-Edit";
     cancelBtn.innerText = "Cancel";
-    cancelBtn.className = "btn btn-secondary Edit d-none";
     const deleteBtn = document.createElement("button");
-    deleteBtn.id = "Delete-Task";
+    deleteBtn.className = "btn btn-danger Action Delete-Task";
     deleteBtn.innerText = "Delete";
-    deleteBtn.className = "btn btn-danger Action";
     if (isTaskLocked(Task)) {
       doneBtn.disabled = true;
       editBtn.disabled = true;
@@ -116,17 +107,15 @@ tbody.addEventListener("click", (e) => {
   const id = Number(tr.dataset.id);
   const task = getTask(id);
   if (!task) return;
-  // BLOCK ALL ACTIONS IF DONE (security layer)
   const locked = isTaskLocked(task);
-  // DONE
-  if (e.target.id === "Done-Task") {
+  const target = e.target;
+  if (target.classList.contains("Done-Task")) {
     if (locked) return;
     task.Status = "Done";
     loadTable();
     return;
   }
-  // DELETE
-  if (e.target.id === "Delete-Task") {
+  if (target.classList.contains("Delete-Task")) {
     if (locked) {
       alert("Completed tasks cannot be deleted.");
       return;
@@ -135,8 +124,7 @@ tbody.addEventListener("click", (e) => {
     loadTable();
     return;
   }
-  // EDIT
-  if (e.target.id === "Edit-Task") {
+  if (target.classList.contains("Edit-Task")) {
     if (locked) {
       alert("Completed tasks cannot be edited.");
       return;
@@ -144,13 +132,12 @@ tbody.addEventListener("click", (e) => {
     toggleEditMode(tr, true);
     return;
   }
-  // CANCEL EDIT
-  if (e.target.id === "CancelEdit") {
+  if (target.classList.contains("Cancel-Edit")) {
     toggleEditMode(tr, false);
+    tr.querySelector("input").value = task.TaskTitle;
     return;
   }
-  // SAVE EDIT
-  if (e.target.id === "Save-Edit") {
+  if (target.classList.contains("Save-Edit")) {
     if (locked) {
       alert("Completed tasks cannot be edited.");
       return;
@@ -176,3 +163,18 @@ tbody.addEventListener("click", (e) => {
     toggleEditMode(tr, false);
   }
 });
+function filterTasks() {
+  const search = document.getElementById("Input-Action").value.toLowerCase();
+  const filter = document.getElementById("Input-Select").value;
+  const filtered = Tasks.filter((t) => {
+    const matchSearch = t.TaskTitle.includes(search);
+    const matchFilter =
+      filter === "all" ||
+      (filter === "done" && t.Status === "Done") ||
+      (filter === "pending" && t.Status === "pending");
+    return matchSearch && matchFilter;
+  });
+  loadTable(filtered);
+}
+document.getElementById("Input-Action").addEventListener("input", filterTasks);
+document.getElementById("Input-Select").addEventListener("change", filterTasks);
