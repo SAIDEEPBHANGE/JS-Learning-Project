@@ -3,7 +3,6 @@
 ## 📖 About
 
 This repository is my personal journey to mastering **Vanilla JavaScript**. The goal is to strengthen my JavaScript skills by building real-world projects, starting with beginner-friendly applications and progressing to more advanced ones.
-
 Each project focuses on important JavaScript concepts like DOM manipulation, asynchronous programming, APIs, local storage, and application architecture.
 
 ---
@@ -382,5 +381,4 @@ After mastering these projects, the next step is to learn:
 # 👨‍💻 Author
 
 **Saideep Arvind Bhange**
-
 Learning JavaScript one project at a time 🚀

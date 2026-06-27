@@ -1,202 +1,178 @@
 let Tasks = [];
 let i = 0;
-let tbody = document.getElementById("TaskBody");
-function loadTable(Tasks) {
+const tbody = document.getElementById("TaskBody");
+function getTask(id) {
+  return Tasks.find((t) => t.Id === Number(id));
+}
+function isTaskLocked(task) {
+  return task.Status === "Done";
+}
+function toggleEditMode(tr, editing) {
+  const span = tr.querySelector("td:nth-child(2) span");
+  const input = tr.querySelector("td:nth-child(2) input");
+  span.classList.toggle("d-none", editing);
+  input.classList.toggle("d-none", !editing);
+  tr.querySelectorAll(".Action").forEach((btn) => {
+    btn.classList.toggle("d-none", editing);
+  });
+  tr.querySelectorAll(".Edit").forEach((btn) => {
+    btn.classList.toggle("d-none", !editing);
+  });
+}
+function disableRow(tr) {
+  tr.querySelectorAll("button").forEach((btn) => {
+    btn.disabled = true;
+  });
+  tr.classList.add("table-success");
+}
+function loadTable() {
   tbody.innerHTML = "";
-
-  for (let Task of Tasks) {
-    let tbodytr = document.createElement("tr");
-    tbodytr.dataset.id = Task.Id;
-    tbodytr.draggable = true;
-
+  Tasks.forEach((Task) => {
+    const tr = document.createElement("tr");
+    tr.dataset.id = Task.Id;
+    tr.draggable = true;
     // ID
-    let trtdid = document.createElement("td");
-    trtdid.innerText = Task.Id;
-
-    // Task Name
-    let trtdName = document.createElement("td");
-
-    let taskText = document.createElement("span");
-    taskText.innerText = Task.TaskTitle;
-
-    let taskInput = document.createElement("input");
-    taskInput.type = "text";
-    taskInput.className = "form-control d-none";
-    taskInput.value = Task.TaskTitle;
-
-    trtdName.appendChild(taskText);
-    trtdName.appendChild(taskInput);
-
+    const tdId = document.createElement("td");
+    tdId.innerText = Task.Id;
+    // Name
+    const tdName = document.createElement("td");
+    const span = document.createElement("span");
+    span.innerText = Task.TaskTitle;
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = Task.TaskTitle;
+    input.className = "form-control d-none";
+    tdName.append(span, input);
     // Status
-    let trtdStatus = document.createElement("td");
-
-    let statusBadge = document.createElement("span");
-    statusBadge.innerText = Task.Status;
-
-    if (Task.Status === "pending") {
-      statusBadge.className = "badge bg-warning text-dark";
-    } else {
-      statusBadge.className = "badge bg-success";
-    }
-
-    trtdStatus.appendChild(statusBadge);
-
-    // Actions
-    let trtdAction = document.createElement("td");
-
-    let btngrp = document.createElement("div");
-    btngrp.className = "btn-group";
-
-    let doneBtn = document.createElement("button");
-    doneBtn.className = "btn btn-success Action";
+    const tdStatus = document.createElement("td");
+    const badge = document.createElement("span");
+    badge.innerText = Task.Status;
+    badge.className =
+      Task.Status === "Done"
+        ? "badge bg-success"
+        : "badge bg-warning text-dark";
+    tdStatus.appendChild(badge);
+    // Buttons
+    const tdAction = document.createElement("td");
+    const group = document.createElement("div");
+    group.className = "btn-group";
+    const doneBtn = document.createElement("button");
     doneBtn.id = "Done-Task";
     doneBtn.innerText = "Done";
-
-    let editBtn = document.createElement("button");
-    editBtn.className = "btn btn-warning Action";
+    doneBtn.className = "btn btn-success Action";
+    const editBtn = document.createElement("button");
     editBtn.id = "Edit-Task";
     editBtn.innerText = "Edit";
-
-    let saveBtn = document.createElement("button");
-    saveBtn.className = "btn btn-info d-none Edit";
+    editBtn.className = "btn btn-warning Action";
+    const saveBtn = document.createElement("button");
     saveBtn.id = "Save-Edit";
     saveBtn.innerText = "Save";
-
-    let cancelBtn = document.createElement("button");
-    cancelBtn.className = "btn btn-warning d-none Edit";
+    saveBtn.className = "btn btn-info Edit d-none";
+    const cancelBtn = document.createElement("button");
     cancelBtn.id = "CancelEdit";
     cancelBtn.innerText = "Cancel";
-
-    let deleteBtn = document.createElement("button");
-    deleteBtn.className = "btn btn-danger Action";
+    cancelBtn.className = "btn btn-secondary Edit d-none";
+    const deleteBtn = document.createElement("button");
     deleteBtn.id = "Delete-Task";
     deleteBtn.innerText = "Delete";
-
-    btngrp.append(doneBtn, editBtn, saveBtn, cancelBtn, deleteBtn);
-    trtdAction.appendChild(btngrp);
-
-    tbodytr.append(trtdid, trtdName, trtdStatus, trtdAction);
-
-    tbody.appendChild(tbodytr);
-  }
+    deleteBtn.className = "btn btn-danger Action";
+    if (isTaskLocked(Task)) {
+      doneBtn.disabled = true;
+      editBtn.disabled = true;
+      deleteBtn.disabled = true;
+      tr.classList.add("table-success");
+    }
+    group.append(doneBtn, editBtn, saveBtn, cancelBtn, deleteBtn);
+    tdAction.appendChild(group);
+    tr.append(tdId, tdName, tdStatus, tdAction);
+    tbody.appendChild(tr);
+  });
 }
 document.getElementById("Clear-Task").addEventListener("click", () => {
   document.getElementById("TaskInput").value = "";
 });
-document.getElementById("Add-Task").addEventListener("click", (e) => {
-  let NewtaskEle = document.getElementById("TaskInput");
-  const title = NewtaskEle.value.trim().toLowerCase();
-  if (title === "") {
-    alert("Type Something!");
+document.getElementById("Add-Task").addEventListener("click", () => {
+  const input = document.getElementById("TaskInput");
+  const title = input.value.trim().toLowerCase();
+  if (!title) {
+    alert("Type something!");
     return;
   }
-  const existing = Tasks.some((task) => task.TaskTitle === title);
-  console.log(existing);
-  if (existing) {
+  if (Tasks.some((t) => t.TaskTitle === title)) {
     alert("Task already exists!");
     return;
   }
-  let Task = {
+  Tasks.push({
     Id: ++i,
     TaskTitle: title,
-    isEditing: false,
-    markAsDone: false,
     Status: "pending",
-  };
-  Tasks.push(Task);
-  loadTable(Tasks);
-  NewtaskEle.value = "";
+  });
+  input.value = "";
+  loadTable();
 });
 tbody.addEventListener("click", (e) => {
-  if (e.target.id === "Edit-Task") {
-    const tr = e.target.closest("tr");
-    const id = Number(tr.dataset.id);
-    const task = Tasks.find((t) => t.Id === id);
-    const span = tr.querySelector("span");
-    const input = tr.querySelector("input");
-    span.classList.add("d-none");
-    input.classList.remove("d-none");
-    tr.querySelectorAll(".Action").forEach((el) => {
-      el.classList.add("d-none");
-    });
-
-    tr.querySelectorAll(".Edit").forEach((el) => {
-      el.classList.remove("d-none");
-    });
-  }
-
-  if (e.target.id === "Delete-Task") {
-    const id = Number(e.target.closest("tr").dataset.id);
-    Tasks = Tasks.filter((t) => t.Id !== id);
-    console.log(id);
-    loadTable(Tasks);
-  }
+  const tr = e.target.closest("tr");
+  if (!tr) return;
+  const id = Number(tr.dataset.id);
+  const task = getTask(id);
+  if (!task) return;
+  // BLOCK ALL ACTIONS IF DONE (security layer)
+  const locked = isTaskLocked(task);
+  // DONE
   if (e.target.id === "Done-Task") {
-    const id = e.target.closest("tr").dataset.id;
-    const t = Tasks.find((t) => t.Id === Number(id));
-    console.log(t, id);
-    t.Status = "Done";
-    loadTable(Tasks);
+    if (locked) return;
+    task.Status = "Done";
+    loadTable();
+    return;
   }
+  // DELETE
+  if (e.target.id === "Delete-Task") {
+    if (locked) {
+      alert("Completed tasks cannot be deleted.");
+      return;
+    }
+    Tasks = Tasks.filter((t) => t.Id !== id);
+    loadTable();
+    return;
+  }
+  // EDIT
+  if (e.target.id === "Edit-Task") {
+    if (locked) {
+      alert("Completed tasks cannot be edited.");
+      return;
+    }
+    toggleEditMode(tr, true);
+    return;
+  }
+  // CANCEL EDIT
   if (e.target.id === "CancelEdit") {
-    const tr = e.target.closest("tr");
-    const span = tr.querySelector("span");
-    const input = tr.querySelector("input");
-    span.classList.remove("d-none");
-    input.classList.add("d-none");
-    tr.querySelectorAll(".Action").forEach((el) => {
-      el.classList.remove("d-none");
-    });
-    tr.querySelectorAll(".Edit").forEach((el) => {
-      el.classList.add("d-none");
-    });
+    toggleEditMode(tr, false);
+    return;
   }
+  // SAVE EDIT
   if (e.target.id === "Save-Edit") {
-    const tr = e.target.closest("tr");
-    const id = Number(tr.dataset.id);
-
+    if (locked) {
+      alert("Completed tasks cannot be edited.");
+      return;
+    }
     const input = tr.querySelector("input");
     const span = tr.querySelector("span");
-
-    const task = Tasks.find((t) => t.Id === id);
-    if (!task) return;
-
     const newTitle = input.value.trim().toLowerCase();
-
-    if (newTitle === "") {
+    if (!newTitle) {
       alert("Task title cannot be empty.");
       input.focus();
       return;
     }
-
     const duplicate = Tasks.some(
       (t) => t.Id !== id && t.TaskTitle === newTitle,
     );
-
     if (duplicate) {
       alert("Task already exists.");
       input.focus();
       return;
     }
-
-    // Update task
     task.TaskTitle = newTitle;
-
-    // Update UI
     span.innerText = newTitle;
-
-    // Hide input, show text
-    input.classList.add("d-none");
-    span.classList.remove("d-none");
-
-    // Show normal action buttons
-    tr.querySelectorAll(".Action").forEach((el) => {
-      el.classList.remove("d-none");
-    });
-
-    // Hide edit buttons
-    tr.querySelectorAll(".Edit").forEach((el) => {
-      el.classList.add("d-none");
-    });
+    toggleEditMode(tr, false);
   }
 });
