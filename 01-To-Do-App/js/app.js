@@ -17,6 +17,15 @@ function getTask(id) {
 function isTaskLocked(task) {
   return task.Status === "Done";
 }
+// Dynamically updates individual task counters in the footer
+function updateTaskCounts() {
+  const allCount = Tasks.length;
+  const pendingCount = Tasks.filter((t) => t.Status === "pending").length;
+  const doneCount = Tasks.filter((t) => t.Status === "Done").length;
+  document.getElementById("CountAll").innerText = allCount;
+  document.getElementById("CountPending").innerText = pendingCount;
+  document.getElementById("CountDone").innerText = doneCount;
+}
 // These functions helps to hide the buttons which is not needed while editing the task information and showing only those button which is needed to show while editing
 function toggleEditMode(tr, editing) {
   const span = tr.querySelector("td:nth-child(2) span");
@@ -92,6 +101,8 @@ function loadTable(tasksToRender = Tasks) {
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll("tr").forEach(addDragEvents);
+  // Update totals whenever the table updates
+  updateTaskCounts();
 }
 // this functions use to clear input textbox sorry
 document.getElementById("Clear-Task").addEventListener("click", () => {
@@ -235,4 +246,5 @@ function addDragEvents(row) {
     row.classList.remove("over");
   });
 }
+// Initial Table Render
 loadTable();

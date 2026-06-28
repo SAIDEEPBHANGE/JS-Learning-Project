@@ -49,7 +49,7 @@ A task management application where users can create, edit, delete, search, and 
 - Event Delegation
 - CRUD Operations
 
----
+## ![To-Do App](/01-To-Do-App.png)
 
 ## 2. 🌦 Weather Dashboard
 

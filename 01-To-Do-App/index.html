@@ -3,56 +3,102 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do-App</title>
-    <link rel="stylesheet" href="/01-To-Do-App/css/style.css" />
+    <title>To-Do App</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
   </head>
-  <body class="container-fluid">
-    <div class="h1 fw-bold text-center">To-Do app</div>
-    <div class="input-group my-3">
-      <input
-        type="text"
-        class="form-control"
-        id="TaskInput"
-        placeholder="Task Example: Need to Mail...."
-      />
-      <button class="btn btn-outline-success" type="button" id="Add-Task">
-        Add Task
-      </button>
-      <button class="btn btn-outline-danger" type="button" id="Clear-Task">
-        Clear
-      </button>
-    </div>
-    <div class="border p-3">
-      <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search Task"
-          id="Input-Action"
-        />
-        <select id="Input-Select" class="form-select" style="max-width: 150px">
-          <option value="all">All</option>
-          <option value="pending">Pending</option>
-          <option value="done">Done</option>
-        </select>
+  <body class="bg-light">
+    <div class="container py-5">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div
+          class="card-header bg-primary text-white text-center rounded-top-4"
+        >
+          <h2 class="fw-bold mb-0">
+            <i class="bi bi-check2-square"></i>
+            To-Do App
+          </h2>
+        </div>
+        <div class="card-body">
+          <div class="input-group mb-4">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              id="TaskInput"
+              placeholder="Enter your task..."
+            />
+            <button class="btn btn-success px-4" id="Add-Task">
+              <i class="bi bi-plus-circle"></i>
+              Add
+            </button>
+            <button class="btn btn-danger px-4" id="Clear-Task">
+              <i class="bi bi-trash"></i>
+              Clear
+            </button>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-8">
+              <input
+                type="text"
+                class="form-control"
+                id="Input-Action"
+                placeholder="🔍 Search Task..."
+              />
+            </div>
+            <div class="col-md-4">
+              <select class="form-select" id="Input-Select">
+                <option value="all">All Tasks</option>
+                <option value="pending">Pending</option>
+                <option value="done">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th width="60">#</th>
+                  <th>Task</th>
+                  <th width="120">Status</th>
+                  <th width="180" class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="TaskBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          <div class="d-flex justify-content-around text-center py-1 fw-bold">
+            <div>
+              All:
+              <span id="CountAll" class="badge bg-primary rounded-pill ms-1"
+                >0</span
+              >
+            </div>
+            <div>
+              Pending:
+              <span
+                id="CountPending"
+                class="badge bg-warning text-dark rounded-pill ms-1"
+                >0</span
+              >
+            </div>
+            <div>
+              Completed:
+              <span id="CountDone" class="badge bg-success rounded-pill ms-1"
+                >0</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Task</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="TaskBody"></tbody>
-      </table>
     </div>
-    <script src="/01-To-Do-App/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/01-To-Do-App/js/app.js"></script>
   </body>
 </html>
