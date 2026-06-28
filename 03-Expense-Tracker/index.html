@@ -4,82 +4,89 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
-    <!-- Bootstrap -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/03-Expense-Tracker/css/style.css" />
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-primary shadow">
+    <nav class="navbar navbar-dark shadow-sm mb-4">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="#">
-          <i class="bi bi-wallet2"></i>
-          Expense Tracker
+        <a
+          class="navbar-brand fw-bold d-flex align-items-center gap-2"
+          href="#"
+        >
+          <i class="bi bi-wallet2 fs-4 text-info"></i>
+          <span>Expense Tracker</span>
         </a>
       </div>
     </nav>
-    <div class="container py-4">
-      <!-- Summary -->
+    <div class="container py-2">
       <div class="row g-3 mb-4">
-        <div class="col-md-4">
-          <div class="card summary income">
+        <div class="col-sm-6 col-md-3">
+          <div class="card summary income shadow-sm">
             <div class="card-body">
               <h6>Total Income</h6>
               <h3>₹0.00</h3>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card summary expense">
+        <div class="col-sm-6 col-md-3">
+          <div class="card summary expense shadow-sm">
             <div class="card-body">
               <h6>Total Expense</h6>
               <h3>₹0.00</h3>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card summary balance">
+        <div class="col-sm-6 col-md-3">
+          <div class="card summary balance shadow-sm">
             <div class="card-body">
               <h6>Balance</h6>
               <h3>₹0.00</h3>
             </div>
           </div>
         </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card summary budget shadow-sm">
+            <div class="card-body">
+              <h6>Budget</h6>
+              <h3>₹10,000.00</h3>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="row">
-        <!-- Left -->
+      <div class="row g-4">
         <div class="col-lg-4">
-          <!-- Add Transaction -->
           <div class="card shadow-sm mb-4">
             <div class="card-header">
-              <h5>Add Transaction</h5>
+              <h5 class="mb-0 fs-6">Add Transaction</h5>
             </div>
             <div class="card-body">
-              <form>
+              <form autocomplete="off">
                 <div class="mb-3">
                   <label class="form-label">Title</label>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Enter title"
+                    placeholder="e.g., Office Grocery"
                   />
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Amount</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Enter amount"
-                  />
+                  <div class="input-group">
+                    <span class="input-group-text bg-light text-muted">₹</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="0.00"
+                    />
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Category</label>
@@ -98,123 +105,145 @@
                   <label class="form-label">Date</label>
                   <input type="date" class="form-control" />
                 </div>
-                <div class="mb-3">
-                  <label class="form-label">Transaction Type</label>
-                  <div class="d-flex gap-3">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" checked />
-                      <label class="form-check-label"> Income </label>
+                <div class="mb-4">
+                  <label class="form-label d-block">Transaction Type</label>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <input
+                        type="radio"
+                        class="btn-check"
+                        name="txType"
+                        id="typeIncome"
+                        checked
+                      />
+                      <label
+                        class="btn btn-outline-success w-100 d-flex align-items-center justify-content-center gap-2"
+                        for="typeIncome"
+                      >
+                        <i class="bi bi-arrow-down-left-circle"></i> Income
+                      </label>
                     </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" />
-                      <label class="form-check-label"> Expense </label>
+                    <div class="col-6">
+                      <input
+                        type="radio"
+                        class="btn-check"
+                        name="txType"
+                        id="typeExpense"
+                      />
+                      <label
+                        class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2"
+                        for="typeExpense"
+                      >
+                        <i class="bi bi-arrow-up-right-circle"></i> Expense
+                      </label>
                     </div>
                   </div>
                 </div>
-                <button class="btn btn-success w-100">
-                  <i class="bi bi-plus-circle"></i>
-                  Save Transaction
+                <button
+                  type="submit"
+                  class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 shadow-sm"
+                >
+                  <i class="bi bi-plus-circle"></i> Save Transaction
                 </button>
               </form>
             </div>
           </div>
-          <!-- Budget Alert -->
-          <div class="card shadow-sm mb-4">
-            <div class="card-header bg-warning">Budget Alert</div>
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h5 class="mb-0 fs-6">Expense Breakdown</h5>
+            </div>
             <div class="card-body">
-              <div class="alert alert-warning mb-0">
-                You are within your monthly budget.
+              <div class="chart-placeholder">
+                <i class="bi bi-pie-chart fs-2 mb-2"></i>
+                <span>Pie Chart Rendering Here</span>
               </div>
             </div>
           </div>
-          <!-- Pie Chart -->
-          <div class="card shadow-sm">
-            <div class="card-header">Expense Categories</div>
-            <div class="card-body text-center">
-              <div class="chart-placeholder">Pie Chart</div>
-            </div>
-          </div>
         </div>
-        <!-- Right -->
         <div class="col-lg-8">
-          <!-- Search -->
           <div class="card shadow-sm mb-4">
             <div class="card-body">
               <div class="row g-3">
-                <div class="col-md-8">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Search transactions..."
-                  />
+                <div class="col-md-9">
+                  <div class="input-group">
+                    <span
+                      class="input-group-text bg-white border-end-0 text-muted"
+                    >
+                      <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                      type="text"
+                      class="form-control border-start-0 ps-1"
+                      placeholder="Search transactions..."
+                    />
+                  </div>
                 </div>
-                <div class="col-md-4 d-grid">
-                  <button class="btn btn-primary">
-                    <i class="bi bi-search"></i>
-                    Search
+                <div class="col-md-3">
+                  <button class="btn btn-outline-secondary w-100">
+                    Clear Filters
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Transactions -->
           <div class="card shadow-sm">
             <div
               class="card-header d-flex justify-content-between align-items-center"
             >
-              <h5 class="mb-0">Transactions</h5>
-              <button class="btn btn-success btn-sm">
-                <i class="bi bi-file-earmark-arrow-down"></i>
-                Export CSV
+              <h5 class="mb-0 fs-6">Recent Transactions</h5>
+              <button
+                class="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
+              >
+                <i class="bi bi-file-earmark-arrow-down"></i> Export
               </button>
             </div>
             <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+              <table class="table table-hover align-middle">
+                <thead>
                   <tr>
                     <th>Title</th>
                     <th>Category</th>
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Date</th>
-                    <th>Action</th>
+                    <th class="text-end">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Salary</td>
+                    <td class="fw-medium">Salary</td>
                     <td>
-                      <span class="badge bg-success"> Salary </span>
+                      <span class="badge bg-success-subtle text-success"
+                        >Salary</span
+                      >
                     </td>
-                    <td>
-                      <span class="text-success"> Income </span>
-                    </td>
-                    <td class="text-success">+₹50,000</td>
-                    <td>01/08/2025</td>
-                    <td>
-                      <button class="btn btn-sm btn-warning">
+                    <td><span class="text-success fw-medium">Income</span></td>
+                    <td class="text-success fw-semibold">+₹50,000</td>
+                    <td class="text-muted">01/08/2025</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-light text-warning me-1">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-sm btn-danger">
+                      <button class="btn btn-sm btn-light text-danger">
                         <i class="bi bi-trash"></i>
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td>Groceries</td>
+                    <td class="fw-medium">Groceries</td>
                     <td>
-                      <span class="badge bg-danger"> Food </span>
+                      <span class="badge bg-danger-subtle text-danger"
+                        >Food</span
+                      >
                     </td>
-                    <td>
-                      <span class="text-danger"> Expense </span>
-                    </td>
-                    <td class="text-danger">-₹1,500</td>
-                    <td>03/08/2025</td>
-                    <td>
-                      <button class="btn btn-sm btn-warning">
+                    <td><span class="text-danger fw-medium">Expense</span></td>
+                    <td class="text-danger fw-semibold">-₹1,500</td>
+                    <td class="text-muted">03/08/2025</td>
+                    <td class="text-end">
+                      <button class="btn btn-sm btn-light text-warning me-1">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-sm btn-danger">
+                      <button class="btn btn-sm btn-light text-danger">
                         <i class="bi bi-trash"></i>
                       </button>
                     </td>
@@ -223,22 +252,23 @@
               </table>
             </div>
           </div>
-          <!-- Monthly Report -->
           <div class="card shadow-sm mt-4">
-            <div class="card-header">Monthly Report</div>
+            <div class="card-header">
+              <h5 class="mb-0 fs-6">Monthly Report Overview</h5>
+            </div>
             <div class="card-body">
-              <div class="row text-center">
-                <div class="col-md-4">
-                  <h4>25</h4>
-                  <small>Total Transactions</small>
+              <div class="row text-center g-3">
+                <div class="col-4 border-end">
+                  <h4 class="report-number">25</h4>
+                  <div class="report-label">Count</div>
                 </div>
-                <div class="col-md-4">
-                  <h4>₹75,000</h4>
-                  <small>Total Income</small>
+                <div class="col-4 border-end">
+                  <h4 class="report-number text-success">₹75,000</h4>
+                  <div class="report-label">Total Income</div>
                 </div>
-                <div class="col-md-4">
-                  <h4>₹28,000</h4>
-                  <small>Total Expenses</small>
+                <div class="col-4">
+                  <h4 class="report-number text-danger">₹28,000</h4>
+                  <div class="report-label">Total Expenses</div>
                 </div>
               </div>
             </div>
@@ -246,7 +276,7 @@
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/03-Expense-Tracker/js/app.js"></script>
   </body>
 </html>
