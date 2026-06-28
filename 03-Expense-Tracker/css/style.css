@@ -1,0 +1,72 @@
+body {
+  background: #f4f7fb;
+  font-family: "Segoe UI", sans-serif;
+}
+.card {
+  border: none;
+  border-radius: 15px;
+}
+.summary {
+  color: #fff;
+}
+.summary h6 {
+  opacity: 0.8;
+}
+.income {
+  background: linear-gradient(135deg, #00c853, #43a047);
+}
+.expense {
+  background: linear-gradient(135deg, #ff5252, #e53935);
+}
+.balance {
+  background: linear-gradient(135deg, #2979ff, #1565c0);
+}
+.card-header {
+  font-weight: 600;
+}
+.table td,
+.table th {
+  vertical-align: middle;
+}
+.badge {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+.chart-placeholder {
+  height: 260px;
+  border: 2px dashed #cfcfcf;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+  font-size: 20px;
+  background: #fafafa;
+}
+.btn {
+  border-radius: 10px;
+}
+.form-control,
+.form-select {
+  border-radius: 10px;
+}
+.alert {
+  border-radius: 10px;
+}
+.table-hover tbody tr:hover {
+  background: #f5f8ff;
+}
+.navbar {
+  padding: 15px 0;
+}
+.card-body h3 {
+  font-weight: 700;
+}
+@media (max-width: 768px) {
+  .summary {
+    text-align: center;
+  }
+  .chart-placeholder {
+    height: 200px;
+  }
+}

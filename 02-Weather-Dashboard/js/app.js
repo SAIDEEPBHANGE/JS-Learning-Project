@@ -5,14 +5,11 @@ const cityInput = document.getElementById("city");
 const weatherContent = document.getElementById("weatherContent");
 const errorCard = document.getElementById("error");
 const recentSearchesContainer = document.getElementById("recentSearches");
-
 const unitToggleC = document.getElementById("unitC");
 const unitToggleF = document.getElementById("unitF");
-
 // State parameters
 let currentSearchQuery = "";
 let recentSearches = JSON.parse(localStorage.getItem("weather_history")) || [];
-
 // WMO Weather Condition Descriptions Map
 const weatherDescription = {
   0: { text: "Clear sky", icon: "bi-sun-fill text-warning", bg: "bg-clear" },
@@ -93,21 +90,17 @@ const weatherDescription = {
     bg: "bg-storm",
   },
 };
-
 // Application Initialization
 document.addEventListener("DOMContentLoaded", () => {
   renderRecentSearches();
-
   // Listen for Unit Switching changes instantly
   unitToggleC.addEventListener("change", reFetchCurrent);
   unitToggleF.addEventListener("change", reFetchCurrent);
-
   // Enter key support inside search field
   cityInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") searchBtn.click();
   });
 });
-
 async function getCoordinates(place) {
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place)}&limit=1`;
   const response = await fetch(url, {
@@ -126,14 +119,12 @@ async function getCoordinates(place) {
   }
   throw new Error("Location not found");
 }
-
 function updateBackground(weatherCode) {
   const lookup = weatherDescription[weatherCode] || { bg: "bg-default" };
   // Remove existing dynamic classes
   document.body.className = "";
   document.body.classList.add(lookup.bg);
 }
-
 function addHistoryItem(name) {
   if (!recentSearches.includes(name)) {
     recentSearches.unshift(name);
@@ -142,7 +133,6 @@ function addHistoryItem(name) {
     renderRecentSearches();
   }
 }
-
 function renderRecentSearches() {
   recentSearchesContainer.innerHTML = "";
   if (recentSearches.length === 0) {
@@ -161,29 +151,23 @@ function renderRecentSearches() {
     recentSearchesContainer.appendChild(btn);
   });
 }
-
 function reFetchCurrent() {
   if (currentSearchQuery) fetchWeatherDashboard(currentSearchQuery, false);
 }
-
 // Main handler triggering full weather lookup stack
 async function fetchWeatherDashboard(placeName, updateHistory = true) {
   if (!placeName) return;
   errorCard.classList.add("d-none");
-
   try {
     const coord = await getCoordinates(placeName);
     currentSearchQuery = placeName;
     if (updateHistory) addHistoryItem(placeName);
-
     const isFahrenheit = unitToggleF.checked;
     const tempUnit = isFahrenheit ? "fahrenheit" : "celsius";
     const windUnit = isFahrenheit ? "mph" : "kmh";
-
     // Build unified target endpoints gathering standard and bonus elements
     const weatherAPI = `https://api.open-meteo.com/v1/forecast?latitude=${coord.lat}&longitude=${coord.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset&temperature_unit=${tempUnit}&wind_speed_unit=${windUnit}&timezone=auto`;
     const airQualityAPI = `https://api.open-meteo.com/v1/air-quality?latitude=${coord.lat}&longitude=${coord.lon}&current=european_aqi`;
-
     // Concurrent parallel network fetches
     const [wRes, aqRes] = await Promise.all([
       fetch(weatherAPI),
@@ -191,7 +175,6 @@ async function fetchWeatherDashboard(placeName, updateHistory = true) {
     ]);
     const wData = await wRes.json();
     const aqData = await aqRes.json();
-
     displayWeatherData(coord.name, wData, aqData);
   } catch (err) {
     console.error(err);
@@ -199,10 +182,8 @@ async function fetchWeatherDashboard(placeName, updateHistory = true) {
     weatherContent.classList.add("d-none");
   }
 }
-
 function displayWeatherData(displayName, weatherData, aqiData) {
   weatherContent.classList.remove("d-none");
-
   const current = weatherData.current;
   const units = weatherData.current_units;
   const daily = weatherData.daily;
@@ -210,10 +191,8 @@ function displayWeatherData(displayName, weatherData, aqiData) {
     text: "Unknown Conditions",
     icon: "bi-cloud-fill text-muted",
   };
-
   // Update Dynamic Background
   updateBackground(current.weather_code);
-
   // Set Main Hero Weather Card Elements
   document.getElementById("cityName").innerText = displayName;
   document.getElementById("temp").innerText =
@@ -221,7 +200,6 @@ function displayWeatherData(displayName, weatherData, aqiData) {
   document.getElementById("description").innerText = lookup.text;
   document.getElementById("weatherIconContainer").innerHTML =
     `<i class="bi ${lookup.icon}" style="font-size: 5rem;"></i>`;
-
   // Standard Metric Displays
   document.getElementById("humidity").innerText =
     `${current.relative_humidity_2m}${units.relative_humidity_2m}`;
@@ -229,25 +207,20 @@ function displayWeatherData(displayName, weatherData, aqiData) {
     `${current.wind_speed_10m} ${units.wind_speed_10m}`;
   document.getElementById("feelsLike").innerText =
     `${Math.round(current.apparent_temperature)}${units.temperature_2m}`;
-
   // Bonus Metrics Processing (UV, AQI, Solar Cycles)
   const todayUv = daily.uv_index_max[0];
   document.getElementById("uvIndex").innerText =
     `${todayUv} (${getUvLabel(todayUv)})`;
-
   const aqiValue = aqiData.current?.european_aqi || "N/A";
   document.getElementById("aqi").innerText =
     `${aqiValue} (${getAqiLabel(aqiValue)})`;
-
   // Strip timestamps to clean readable user localized hour strings
   const formatTime = (timeStr) => (timeStr ? timeStr.split("T")[1] : "--:--");
   document.getElementById("sunrise").innerText = formatTime(daily.sunrise[0]);
   document.getElementById("sunset").innerText = formatTime(daily.sunset[0]);
-
   // Construct 5-Day Grid Layout
   const container = document.getElementById("forecastContainer");
   container.innerHTML = "";
-
   for (let i = 1; i <= 5; i++) {
     const rawDate = new Date(daily.time[i]);
     const dayName = rawDate.toLocaleDateString("en-US", { weekday: "short" });
@@ -256,7 +229,6 @@ function displayWeatherData(displayName, weatherData, aqiData) {
     };
     const maxTemp = Math.round(daily.temperature_2m_max[i]);
     const minTemp = Math.round(daily.temperature_2m_min[i]);
-
     const forecastCol = document.createElement("div");
     forecastCol.className = "col";
     forecastCol.innerHTML = `
@@ -269,7 +241,6 @@ function displayWeatherData(displayName, weatherData, aqiData) {
     container.appendChild(forecastCol);
   }
 }
-
 // Quantitative classification parsing helpers
 function getUvLabel(uv) {
   if (uv <= 2) return "Low";
@@ -277,19 +248,16 @@ function getUvLabel(uv) {
   if (uv <= 7) return "High";
   return "Very High";
 }
-
 function getAqiLabel(aqi) {
   if (aqi <= 20) return "Excellent";
   if (aqi <= 40) return "Good";
   if (aqi <= 60) return "Fair";
   return "Poor";
 }
-
 // Action Event Attachments
 searchBtn.addEventListener("click", () =>
   fetchWeatherDashboard(cityInput.value.trim()),
 );
-
 geoBtn.addEventListener("click", () => {
   if (navigator.geolocation) {
     geoBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status"></span> Detecting...`;
