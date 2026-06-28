@@ -1,0 +1,14 @@
+body {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  min-height: 100vh;
+}
+.card {
+  backdrop-filter: blur(10px);
+}
+#temp {
+  font-size: 60px;
+  font-weight: bold;
+}
+#description {
+  font-size: 20px;
+}
