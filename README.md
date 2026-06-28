@@ -87,6 +87,8 @@ A weather application that displays current weather conditions and forecasts usi
 - Loading States
 - Browser Geolocation API
 
+## ![Weather Dashboard](/02-Weather-Dashboard.png)
+
 ---
 
 ## 3. 💰 Expense Tracker

@@ -4,17 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Dashboard</title>
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Bootstrap Icons -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     />
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/02-Weather-Dashboard/css/style.css" />
   </head>
   <body class="bg-light">
@@ -31,7 +28,6 @@
               </h2>
             </div>
             <div class="card-body">
-              <!-- Search -->
               <div class="input-group mb-4">
                 <input
                   type="text"
@@ -44,12 +40,12 @@
                   Search
                 </button>
               </div>
-              <!-- Weather Result -->
               <div id="weatherCard" class="text-center d-none">
-                <h3 id="cityName"></h3>
-                <img id="icon" width="100" />
+                <h3 id="cityName" class="fs-4 text-muted"></h3>
+                <div id="weatherIconContainer" class="my-2"></div>
                 <h1 id="temp"></h1>
-                <p id="description" class="text-capitalize"></p>
+                <p id="description" class="text-capitalize fw-semibold"></p>
+
                 <div class="row mt-4">
                   <div class="col">
                     <i class="bi bi-droplet-fill text-primary fs-3"></i>
@@ -58,7 +54,7 @@
                   </div>
                   <div class="col">
                     <i class="bi bi-wind fs-3 text-success"></i>
-                    <h6>Wind (10 m above ground)</h6>
+                    <h6>Wind</h6>
                     <p id="wind"></p>
                   </div>
                   <div class="col">
@@ -68,6 +64,7 @@
                   </div>
                 </div>
               </div>
+
               <div id="error" class="text-center mt-3 d-none">
                 <div
                   class="alert alert-danger d-inline-flex align-items-center gap-2"
@@ -82,9 +79,7 @@
         </div>
       </div>
     </div>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- App JS -->
     <script src="/02-Weather-Dashboard/js/app.js"></script>
   </body>
 </html>
