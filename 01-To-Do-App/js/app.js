@@ -181,38 +181,29 @@ document.getElementById("Input-Action").addEventListener("input", filterTasks);
 document.getElementById("Input-Select").addEventListener("change", filterTasks);
 let draggedRow = null;
 function addDragEvents(row) {
-  console.log(row);
   row.addEventListener("dragstart", () => {
     draggedRow = row;
     row.classList.add("dragging");
   });
-
   row.addEventListener("dragend", () => {
     row.classList.remove("dragging");
     draggedRow = null;
-
     tbody.querySelectorAll("tr").forEach((r) => r.classList.remove("over"));
   });
-
   row.addEventListener("dragover", (e) => {
     e.preventDefault();
   });
-
   row.addEventListener("dragenter", () => {
     if (row !== draggedRow) row.classList.add("over");
   });
-
   row.addEventListener("dragleave", () => {
     row.classList.remove("over");
   });
-
   row.addEventListener("drop", (e) => {
     e.preventDefault();
-
     if (row !== draggedRow) {
       tbody.insertBefore(draggedRow, row);
     }
-
     row.classList.remove("over");
   });
 }
