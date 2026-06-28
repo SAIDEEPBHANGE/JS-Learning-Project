@@ -1,22 +1,78 @@
+/* Custom Dynamic Atmospheric Gradient Backgrounds */
 body {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
+  transition: background 0.8s ease-in-out;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #9ecee7);
 }
 
-.card {
+body.bg-clear {
+  background: linear-gradient(135deg, #ff9900, #ff5e62);
+}
+
+body.bg-cloudy {
+  background: linear-gradient(135deg, #5b86e5, #36d1dc);
+}
+
+body.bg-overcast {
+  background: linear-gradient(135deg, #617ca3, #a8b8d0);
+}
+
+body.bg-rain,
+body.bg-storm {
+  background: linear-gradient(135deg, #2b5876, #4e4376);
+}
+
+body.bg-snow {
+  background: linear-gradient(135deg, #e6f7ff, #aecad6);
+}
+
+body.bg-fog {
+  background: linear-gradient(135deg, #757f9a, #d7dde8);
+}
+
+/* Glassmorphism Card Styling Elements */
+.glass-card {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.main-weather-card {
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-#temp {
-  font-size: 60px;
-  font-weight: bold;
-  margin-bottom: 0;
+/* Fluid UI Animation Effects */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-#description {
-  font-size: 20px;
-  color: #555;
+.animate-bounce {
+  animation: bounce 3s infinite alternate ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
 }
