@@ -128,6 +128,8 @@ A finance tracker to manage income and expenses while displaying reports and bal
 - Data Filtering
 - Basic Data Visualization
 
+## ![Expense Tracker](/03-Expense-Tracker.png)
+
 ---
 
 ## 4. 🎬 Movie Search App
