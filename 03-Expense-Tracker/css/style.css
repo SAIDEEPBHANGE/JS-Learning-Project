@@ -1,4 +1,3 @@
-/* Fallback inline styles matching your path structure */
 .card.summary.income {
   border-left: 4px solid #198754;
 }
@@ -10,8 +9,4 @@
 }
 .card.summary.budget {
   border-left: 4px solid #ffc107;
-}
-.chart-placeholder {
-  text-align: center;
-  padding: 2rem;
 }
