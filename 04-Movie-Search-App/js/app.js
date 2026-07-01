@@ -2,6 +2,7 @@ const BASE_URL = "https://api.tvmaze.com";
 const showContainer = document.getElementById("showContainer");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
+const clearBtn = document.getElementById("clearBtn");
 // 1. Fetch default landing page shows
 async function getShows() {
   try {
@@ -91,3 +92,7 @@ searchInput.addEventListener("keydown", (e) => {
 });
 // Run default shows on start
 getShows();
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  getShows();
+});

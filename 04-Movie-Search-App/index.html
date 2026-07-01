@@ -17,7 +17,7 @@
   <body>
     <nav class="navbar navbar-dark bg-dark sticky-top">
       <div class="container">
-        <a href="#" class="navbar-brand fw-bold">🎬 MovieHub</a>
+        <a onclick="getShows()" class="navbar-brand fw-bold">🎬 MovieHub</a>
       </div>
     </nav>
     <section class="hero">
@@ -32,6 +32,9 @@
             />
             <button id="searchBtn" class="btn btn-danger">
               <i class="bi bi-search"></i> Search
+            </button>
+            <button id="clearBtn" class="btn btn-warning">
+              <i class="bi bi-x-circle"></i> Clear Filter
             </button>
           </div>
         </div>
