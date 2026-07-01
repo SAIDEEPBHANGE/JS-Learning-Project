@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/03-Expense-Tracker/css/style.css" />
   </head>
   <body>
-    <nav class="navbar navbar-dark shadow-sm mb-4">
+    <nav class="navbar navbar-dark shadow-sm">
       <div class="container d-flex justify-content-between align-items-center">
         <a
           class="navbar-brand fw-bold d-flex align-items-center gap-2 mb-0"
@@ -24,16 +24,16 @@
           <i class="bi bi-wallet2 fs-4 text-info"></i>
           <span>Expense Tracker</span>
         </a>
-        <select class="form-select w-auto" id="MonthSelect"></select>
+        <select class="form-select w-auto py-1.5" id="MonthSelect"></select>
       </div>
     </nav>
-    <div class="container py-2">
+    <div class="container py-4">
       <div class="row g-3 mb-4" id="ExpenseSummaryCard">
         <div class="col-sm-6 col-md-3">
           <div class="card summary income shadow-sm">
             <div class="card-body">
               <h6>Total Income</h6>
-              <h3></h3>
+              <h3>₹0.00</h3>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
           <div class="card summary expense shadow-sm">
             <div class="card-body">
               <h6>Total Expense</h6>
-              <h3></h3>
+              <h3>₹0.00</h3>
             </div>
           </div>
         </div>
@@ -49,26 +49,25 @@
           <div class="card summary balance shadow-sm">
             <div class="card-body">
               <h6>Balance</h6>
-              <h3></h3>
+              <h3>₹0.00</h3>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-md-3">
           <div class="card summary budget shadow-sm">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
+              <div
+                class="d-flex justify-content-between align-items-center mb-1"
+              >
                 <h6>Budget</h6>
-
                 <button
-                  class="btn btn-sm btn-outline-primary"
+                  class="btn btn-sm btn-link text-warning p-0 border-0"
                   id="editBudgetBtn"
                 >
-                  <i class="bi bi-pencil"></i>
+                  <i class="bi bi-pencil-square fs-6"></i>
                 </button>
               </div>
-
-              <h3 id="budgetAmount">₹10,000.00</h3>
-
+              <h3 id="budgetAmount">0</h3>
               <div
                 class="input-group input-group-sm mt-2 d-none"
                 id="budgetEditBox"
@@ -78,134 +77,106 @@
                   class="form-control"
                   id="budgetInput"
                   placeholder="Enter budget"
+                  min="0"
                 />
-                <button class="btn btn-success" id="saveBudgetBtn">Save</button>
+                <button class="btn btn-success px-3" id="saveBudgetBtn">
+                  Save
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row g-4">
-        <div class="col-12 col-lg-6 col-md-6">
-          <div class="card shadow-sm mb-4">
+      <div class="row g-3">
+        <div class="col-xl-8 col-lg-7">
+          <div class="card shadow-sm mb-3">
             <div class="card-header">
-              <h5 class="mb-0 fs-6">Add Transaction</h5>
+              <i class="bi bi-plus-circle-fill text-primary me-2"></i>Add
+              Transaction
             </div>
             <div class="card-body">
-              <form autocomplete="off">
-                <div class="mb-3">
-                  <label class="form-label">Title</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="e.g., Office Grocery"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Amount</label>
-                  <div class="input-group">
-                    <span class="input-group-text bg-light text-muted">₹</span>
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-5 col-sm-6">
+                    <label class="form-label">Transaction Title</label>
                     <input
-                      type="number"
                       class="form-control"
-                      placeholder="0.00"
+                      placeholder="e.g., Office Grocery"
                     />
                   </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Category</label>
-                  <select class="form-select">
-                    <option>Salary</option>
-                    <option>Food</option>
-                    <option>Shopping</option>
-                    <option>Travel</option>
-                    <option>Rent</option>
-                    <option>Bills</option>
-                    <option>Entertainment</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Date</label>
-                  <input type="date" class="form-control" />
-                </div>
-                <div class="mb-4">
-                  <label class="form-label d-block">Transaction Type</label>
-                  <div class="row g-2">
-                    <div class="col-6">
+                  <div class="col-md-3 col-sm-3">
+                    <label class="form-label">Amount</label>
+                    <div class="input-group">
+                      <span class="input-group-text">₹</span>
+                      <input class="form-control" placeholder="0.00" />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-sm-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control text-muted" />
+                  </div>
+                  <div class="col-md-5 col-sm-6" id="TransactionType">
+                    <label class="form-label">Transaction Type</label>
+                    <div class="d-flex gap-2">
                       <input
                         type="radio"
                         class="btn-check"
-                        name="txType"
-                        id="typeIncome"
+                        name="type"
+                        id="income"
                         checked
                       />
                       <label
-                        class="btn btn-outline-success w-100 d-flex align-items-center justify-content-center gap-2"
-                        for="typeIncome"
+                        class="btn btn-outline-success flex-fill"
+                        for="income"
                       >
-                        <i class="bi bi-arrow-down-left-circle"></i> Income
+                        <i class="bi bi-arrow-down-left-circle me-1"></i>Income
                       </label>
-                    </div>
-                    <div class="col-6">
                       <input
                         type="radio"
                         class="btn-check"
-                        name="txType"
-                        id="typeExpense"
+                        name="type"
+                        id="expense"
                       />
                       <label
-                        class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2"
-                        for="typeExpense"
+                        class="btn btn-outline-danger flex-fill"
+                        for="expense"
                       >
-                        <i class="bi bi-arrow-up-right-circle"></i> Expense
+                        <i class="bi bi-arrow-up-right-circle me-1"></i>Expense
                       </label>
                     </div>
                   </div>
+                  <div class="col-md-4 col-sm-6">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="TypeCategory"></select>
+                  </div>
+                  <div class="col-md-3 col-sm-6 d-flex align-items-end">
+                    <button
+                      class="btn btn-primary w-100 py-2 fw-semibold shadow-sm"
+                    >
+                      <i class="bi bi-check-circle me-1"></i>Save Entry
+                    </button>
+                  </div>
                 </div>
-                <button
-                  type="submit"
-                  class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2 shadow-sm"
-                >
-                  <i class="bi bi-plus-circle"></i> Save Transaction
-                </button>
               </form>
             </div>
           </div>
-        </div>
-        <div class="col-12 col-lg-6 col-md-6">
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <h5 class="mb-0 fs-6">Expense Breakdown</h5>
-            </div>
-            <div class="card-body">
-              <div class="chart-placeholder">
-                <i class="bi bi-pie-chart fs-2 mb-2"></i>
-                <span>Pie Chart Rendering Here</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="card shadow-sm mb-4">
-            <div class="card-body">
-              <div class="row g-3">
-                <div class="col-md-9">
-                  <div class="input-group">
+          <div class="card shadow-sm mb-3 bg-white">
+            <div class="card-body py-2 px-3">
+              <div class="row g-2 align-items-center">
+                <div class="col-md-9 col-sm-8">
+                  <div class="input-group input-group-sm">
                     <span
-                      class="input-group-text bg-white border-end-0 text-muted"
-                    >
-                      <i class="bi bi-search"></i>
-                    </span>
+                      class="input-group-text border-end-0 bg-transparent text-muted"
+                      ><i class="bi bi-search"></i
+                    ></span>
                     <input
-                      type="text"
-                      class="form-control border-start-0 ps-1"
+                      class="form-control border-start-0"
                       placeholder="Search transactions..."
                     />
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <button class="btn btn-outline-secondary w-100">
+                <div class="col-md-3 col-sm-4">
+                  <button class="btn btn-sm btn-outline-secondary w-100">
                     Clear Filters
                   </button>
                 </div>
@@ -216,60 +187,70 @@
             <div
               class="card-header d-flex justify-content-between align-items-center"
             >
-              <h5 class="mb-0 fs-6">Recent Transactions</h5>
+              <div class="d-flex align-items-center gap-2">
+                <span>Recent Transactions</span>
+                <span
+                  class="badge bg-primary-subtle text-primary rounded-pill px-2"
+                  >25 total</span
+                >
+              </div>
               <button
-                class="btn btn-outline-success btn-sm d-flex align-items-center gap-1"
+                class="btn btn-sm btn-outline-success font-monospace px-2 py-1"
               >
-                <i class="bi bi-file-earmark-arrow-down"></i> Export
+                <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
               </button>
             </div>
             <div class="table-responsive">
-              <table class="table table-hover align-middle">
+              <table class="table table-hover align-middle mb-0 text-nowrap">
                 <thead>
                   <tr>
-                    <th>Title</th>
+                    <th class="ps-4">Title</th>
                     <th>Category</th>
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Date</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-end pe-4">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="TransactionTbody">
                   <tr>
-                    <td class="fw-medium">Salary</td>
+                    <td class="fw-semibold ps-4">Salary</td>
                     <td>
                       <span class="badge bg-success-subtle text-success"
                         >Salary</span
                       >
                     </td>
-                    <td><span class="text-success fw-medium">Income</span></td>
-                    <td class="text-success fw-semibold">+₹50,000</td>
-                    <td class="text-muted">01/08/2025</td>
-                    <td class="text-end">
-                      <button class="btn btn-sm btn-light text-warning me-1">
+                    <td class="text-success fw-medium">Income</td>
+                    <td class="text-success fw-bold">+₹50,000</td>
+                    <td class="text-muted small">01/08/2025</td>
+                    <td class="text-end pe-4">
+                      <button
+                        class="btn btn-sm btn-light text-warning p-1 me-1"
+                      >
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-sm btn-light text-danger">
+                      <button class="btn btn-sm btn-light text-danger p-1">
                         <i class="bi bi-trash"></i>
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td class="fw-medium">Groceries</td>
+                    <td class="fw-semibold ps-4">Groceries</td>
                     <td>
                       <span class="badge bg-danger-subtle text-danger"
                         >Food</span
                       >
                     </td>
-                    <td><span class="text-danger fw-medium">Expense</span></td>
-                    <td class="text-danger fw-semibold">-₹1,500</td>
-                    <td class="text-muted">03/08/2025</td>
-                    <td class="text-end">
-                      <button class="btn btn-sm btn-light text-warning me-1">
+                    <td class="text-danger fw-medium">Expense</td>
+                    <td class="text-danger fw-bold">-₹1,500</td>
+                    <td class="text-muted small">03/08/2025</td>
+                    <td class="text-end pe-4">
+                      <button
+                        class="btn btn-sm btn-light text-warning p-1 me-1"
+                      >
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="btn btn-sm btn-light text-danger">
+                      <button class="btn btn-sm btn-light text-danger p-1">
                         <i class="bi bi-trash"></i>
                       </button>
                     </td>
@@ -277,25 +258,47 @@
                 </tbody>
               </table>
             </div>
-          </div>
-          <div class="card shadow-sm mt-4">
-            <div class="card-header">
-              <h5 class="mb-0 fs-6">Monthly Report Overview</h5>
+            <div
+              class="card-footer bg-transparent py-3 px-4 border-top border-light"
+            >
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted small">Showing 1-2 of 25 items</span>
+                <ul class="pagination pagination-sm mb-0">
+                  <li class="page-item disabled">
+                    <button class="page-link border-0 bg-light me-1 px-3">
+                      Prev
+                    </button>
+                  </li>
+                  <li class="page-item active">
+                    <button class="page-link border-0 me-1 px-3">1</button>
+                  </li>
+                  <li class="page-item">
+                    <button class="page-link border-0 me-1 px-3">2</button>
+                  </li>
+                  <li class="page-item">
+                    <button class="page-link border-0 bg-light px-3">
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div class="card-body">
-              <div class="row text-center g-3">
-                <div class="col-4 border-end">
-                  <h4 class="report-number">25</h4>
-                  <div class="report-label">Count</div>
-                </div>
-                <div class="col-4 border-end">
-                  <h4 class="report-number text-success">₹75,000</h4>
-                  <div class="report-label">Total Income</div>
-                </div>
-                <div class="col-4">
-                  <h4 class="report-number text-danger">₹28,000</h4>
-                  <div class="report-label">Total Expenses</div>
-                </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-5">
+          <div class="card shadow-sm h-100">
+            <div class="card-header">
+              <i class="bi bi-pie-chart-fill text-primary me-2"></i>Expense
+              Breakdown
+            </div>
+            <div
+              class="card-body d-flex align-items-center justify-content-center"
+            >
+              <div class="chart-placeholder w-100">
+                <i class="bi bi-pie-chart text-muted opacity-50 fs-1 mb-2"></i>
+                <span class="fw-medium text-secondary"
+                  >Chart Visualization Area</span
+                >
               </div>
             </div>
           </div>

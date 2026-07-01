@@ -1,4 +1,4 @@
-const TransactionType = Object.freeze({
+const TransactionTypes = Object.freeze({
   INCOME: "Income",
   EXPENSE: "Expense",
 });
@@ -82,7 +82,6 @@ function SavetoStorage() {
   localStorage.setItem(LocalStoragekey, JSON.stringify(MonthYear));
   localStorage.setItem("LastTransactionId", JSON.stringify(id.toString()));
 }
-
 function loadExpenseSummaryCards() {
   const totalIncome = MonthYear.totalIncome || 0;
   const totalExpense = MonthYear.totalExpense || 0;
@@ -111,13 +110,48 @@ editBtn.addEventListener("click", () => {
   budgetAmount.classList.add("d-none");
 });
 saveBtn.addEventListener("click", () => {
+  editBox.classList.add("d-none");
+  budgetAmount.classList.remove("d-none");
   const amount = Number(budgetInput.value) || 0;
+  if (amount <= 0) {
+    alert("Balance should be Positive!");
+    return;
+  }
   budgetAmount.textContent = `₹${amount.toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
   MonthYear.budget = amount;
   SavetoStorage();
-  editBox.classList.add("d-none");
-  budgetAmount.classList.remove("d-none");
 });
+// Transaction Type
+const TransactionTypeInput = document.getElementById("TransactionType");
+const TypeCategory = document.getElementById("TypeCategory");
+document.addEventListener("DOMContentLoaded", () => {
+  loadCategories(TransactionTypes.INCOME);
+});
+TransactionTypeInput.addEventListener("change", (e) => {
+  const selectedType =
+    e.target.id === "income"
+      ? TransactionTypes.INCOME
+      : TransactionTypes.EXPENSE;
+
+  console.log(selectedType);
+
+  loadCategories(selectedType);
+});
+function loadCategories(type) {
+  TypeCategory.innerHTML = "";
+
+  const categories =
+    type === TransactionTypes.INCOME
+      ? Object.values(IncomeCategory)
+      : Object.values(ExpenseCategory);
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    TypeCategory.appendChild(option);
+  });
+}
