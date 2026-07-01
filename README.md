@@ -169,6 +169,8 @@ A movie browser that searches movie information from an external API.
 - State Management
 - Search Optimization
 
+## ![Movie Search App](/04-Movie-Search-App.png)
+
 ---
 
 ## 5. 📋 Kanban Task Board
