@@ -23,14 +23,9 @@ const ExpenseCategory = Object.freeze({
   TRANSPORTATION: "Transportation",
   OTHER: "Other",
 });
-const TransactionCategories = Object.freeze({
-  [TransactionType.INCOME]: Object.values(IncomeCategory),
-  [TransactionType.EXPENSE]: Object.values(ExpenseCategory),
-});
-function GetMonthData(LocalStoragekey) {
-  console.log(LocalStoragekey);
+function GetMonthData(key) {
   return (
-    JSON.parse(localStorage.getItem(LocalStoragekey)) || {
+    JSON.parse(localStorage.getItem(key)) || {
       totalIncome: 0,
       totalExpense: 0,
       budget: 0,
@@ -38,8 +33,14 @@ function GetMonthData(LocalStoragekey) {
     }
   );
 }
-// This is loading the drop down of current financial year month and year into the drop down select Which is placed in navbar
+let expenseChartInstance = null;
+// Global UI bindings
 const monthsSelected = document.querySelector("#MonthSelect");
+const transactionForm = document.getElementById("transactionForm");
+const transactionTbody = document.getElementById("TransactionTbody");
+const searchInput = document.getElementById("searchInput");
+const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+const exportCsvBtn = document.getElementById("exportCsvBtn");
 const months = [
   "April",
   "May",
@@ -55,34 +56,42 @@ const months = [
   "March",
 ];
 const today = new Date();
+document.getElementById("transactionDate").value = today
+  .toISOString()
+  .split("T")[0];
 const currentYear = today.getFullYear();
 const currentMonth = today.getMonth();
 const fyStartYear = currentMonth >= 3 ? currentYear : currentYear - 1;
 let LocalStoragekey = `${currentMonth} - ${currentYear}`;
+// Populate Months Selector
 months.forEach((m, i) => {
   const options = document.createElement("option");
   const year = i < 9 ? fyStartYear : fyStartYear + 1;
   options.value = `${(i + 3) % 12} - ${year}`;
   options.textContent = `${m} - ${year}`;
-  if (currentMonth == (i + 3) % 12) {
+  if (currentMonth === (i + 3) % 12) {
     options.selected = true;
   }
   monthsSelected.appendChild(options);
 });
-MonthSelect.addEventListener("change", (e) => {
-  LocalStoragekey = e.target.value;
-  MonthYear = GetMonthData(LocalStoragekey);
-  loadExpenseSummaryCards();
-});
-// Fetching information from local storage
 let MonthYear = GetMonthData(LocalStoragekey);
-let id = Number(localStorage.getItem("LastTransactionId")) || 0;
-console.log(MonthYear, id);
+let lastId = Number(localStorage.getItem("LastTransactionId")) || 0;
 function SavetoStorage() {
   localStorage.setItem(LocalStoragekey, JSON.stringify(MonthYear));
-  localStorage.setItem("LastTransactionId", JSON.stringify(id.toString()));
+  localStorage.setItem("LastTransactionId", lastId.toString());
+}
+function recalculateTotals() {
+  let income = 0;
+  let expense = 0;
+  MonthYear.transactions.forEach((t) => {
+    if (t.type === TransactionTypes.INCOME) income += t.amount;
+    else expense += t.amount;
+  });
+  MonthYear.totalIncome = income;
+  MonthYear.totalExpense = expense;
 }
 function loadExpenseSummaryCards() {
+  recalculateTotals();
   const totalIncome = MonthYear.totalIncome || 0;
   const totalExpense = MonthYear.totalExpense || 0;
   const balance = totalIncome - totalExpense;
@@ -91,13 +100,151 @@ function loadExpenseSummaryCards() {
   cards[0].textContent = `₹${totalIncome.toFixed(2)}`;
   cards[1].textContent = `₹${totalExpense.toFixed(2)}`;
   cards[2].textContent = `₹${balance.toFixed(2)}`;
-  cards[3].textContent = `₹${budget.toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+  document.getElementById("budgetAmount").textContent =
+    `₹${budget.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
 }
-loadExpenseSummaryCards();
-// Editing budget for Selected month Is below
+function renderTable(filterText = "") {
+  transactionTbody.innerHTML = "";
+  const filtered = MonthYear.transactions.filter((t) =>
+    t.title.toLowerCase().includes(filterText.toLowerCase()),
+  );
+  document.getElementById("totalCountBadge").textContent =
+    `${filtered.length} total`;
+  if (filtered.length === 0) {
+    transactionTbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">No transactions recorded for this period.</td></tr>`;
+    return;
+  }
+  filtered.forEach((t) => {
+    const tr = document.createElement("tr");
+    const isIncome = t.type === TransactionTypes.INCOME;
+    const formattedDate = new Date(t.date).toLocaleDateString("en-IN");
+    tr.innerHTML = `
+      <td class="fw-semibold ps-4">${t.title}</td>
+      <td>
+        <span class="badge ${isIncome ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger"}">
+          ${t.category}
+        </span>
+      </td>
+      <td class="${isIncome ? "text-success" : "text-danger"} fw-medium">${t.type}</td>
+      <td class="${isIncome ? "text-success" : "text-danger"} fw-bold">
+        ${isIncome ? "+" : "-"}₹${t.amount.toFixed(2)}
+      </td>
+      <td class="text-muted small">${formattedDate}</td>
+      <td class="text-end pe-4">
+        <button class="btn btn-sm btn-light text-danger p-1 option-delete" data-id="${t.id}">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+    transactionTbody.appendChild(tr);
+  });
+  document.querySelectorAll(".option-delete").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = Number(btn.getAttribute("data-id"));
+      MonthYear.transactions = MonthYear.transactions.filter(
+        (t) => t.id !== targetId,
+      );
+      SavetoStorage();
+      loadExpenseSummaryCards();
+      renderTable(searchInput.value);
+      updateChart();
+    });
+  });
+}
+function updateChart() {
+  const canvas = document.getElementById("expenseChart");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const expenses = MonthYear.transactions.filter(
+    (t) => t.type === TransactionTypes.EXPENSE,
+  );
+  const dataMap = {};
+  expenses.forEach((e) => {
+    dataMap[e.category] = (dataMap[e.category] || 0) + e.amount;
+  });
+  const labels = Object.keys(dataMap);
+  const dataValues = Object.values(dataMap);
+  if (expenseChartInstance) {
+    expenseChartInstance.destroy();
+  }
+  if (labels.length === 0) {
+    return;
+  }
+  expenseChartInstance = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: dataValues,
+          backgroundColor: [
+            "#dc3545",
+            "#fd7e14",
+            "#ffc107",
+            "#198754",
+            "#20c997",
+            "#0dcaf0",
+            "#0d6efd",
+            "#6610f2",
+            "#6f42c1",
+            "#d63384",
+          ],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+        },
+      },
+    },
+  });
+}
+function exportToCSV() {
+  if (MonthYear.transactions.length === 0) {
+    alert("No data available to export for this month.");
+    return;
+  }
+  // Define headers
+  const headers = ["Title", "Category", "Type", "Amount (INR)", "Date"];
+  // Format rows
+  const rows = MonthYear.transactions.map((t) => [
+    `"${t.title.replace(/"/g, '""')}"`, // escape quotes
+    `"${t.category}"`,
+    `"${t.type}"`,
+    t.amount.toFixed(2),
+    t.date,
+  ]);
+  // Combine headers and rows
+  const csvContent = [headers.join(","), ...rows.map((e) => e.join(","))].join(
+    "",
+  );
+  // Create download link element
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  // Create descriptive filename using current month selection
+  const sanitizedKey = LocalStoragekey.replace(/ /g, "");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `ExpenseReport_${sanitizedKey}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+monthsSelected.addEventListener("change", (e) => {
+  LocalStoragekey = e.target.value;
+  MonthYear = GetMonthData(LocalStoragekey);
+  loadExpenseSummaryCards();
+  renderTable();
+  updateChart();
+});
 const editBtn = document.getElementById("editBudgetBtn");
 const saveBtn = document.getElementById("saveBudgetBtn");
 const editBox = document.getElementById("budgetEditBox");
@@ -105,49 +252,30 @@ const budgetInput = document.getElementById("budgetInput");
 const budgetAmount = document.getElementById("budgetAmount");
 editBtn.addEventListener("click", () => {
   editBox.classList.remove("d-none");
-  budgetInput.value = "";
+  budgetInput.value = MonthYear.budget || "";
   budgetInput.focus();
   budgetAmount.classList.add("d-none");
 });
 saveBtn.addEventListener("click", () => {
-  editBox.classList.add("d-none");
-  budgetAmount.classList.remove("d-none");
   const amount = Number(budgetInput.value) || 0;
-  if (amount <= 0) {
-    alert("Balance should be Positive!");
+  if (amount < 0) {
+    alert("Budget cannot be negative.");
     return;
   }
-  budgetAmount.textContent = `₹${amount.toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
   MonthYear.budget = amount;
   SavetoStorage();
+  editBox.classList.add("d-none");
+  budgetAmount.classList.remove("d-none");
+  loadExpenseSummaryCards();
 });
-// Transaction Type
 const TransactionTypeInput = document.getElementById("TransactionType");
 const TypeCategory = document.getElementById("TypeCategory");
-document.addEventListener("DOMContentLoaded", () => {
-  loadCategories(TransactionTypes.INCOME);
-});
-TransactionTypeInput.addEventListener("change", (e) => {
-  const selectedType =
-    e.target.id === "income"
-      ? TransactionTypes.INCOME
-      : TransactionTypes.EXPENSE;
-
-  console.log(selectedType);
-
-  loadCategories(selectedType);
-});
 function loadCategories(type) {
   TypeCategory.innerHTML = "";
-
   const categories =
     type === TransactionTypes.INCOME
       ? Object.values(IncomeCategory)
       : Object.values(ExpenseCategory);
-
   categories.forEach((category) => {
     const option = document.createElement("option");
     option.value = category;
@@ -155,3 +283,46 @@ function loadCategories(type) {
     TypeCategory.appendChild(option);
   });
 }
+TransactionTypeInput.addEventListener("change", () => {
+  const selectedType = document.getElementById("income").checked
+    ? TransactionTypes.INCOME
+    : TransactionTypes.EXPENSE;
+  loadCategories(selectedType);
+});
+transactionForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const title = document.getElementById("transactionTitle").value.trim();
+  const amount = parseFloat(document.getElementById("transactionAmount").value);
+  const date = document.getElementById("transactionDate").value;
+  const type = document.getElementById("income").checked
+    ? TransactionTypes.INCOME
+    : TransactionTypes.EXPENSE;
+  const category = TypeCategory.value;
+  if (!title || isNaN(amount) || amount <= 0 || !date) return;
+  lastId++;
+  const newTransaction = { id: lastId, title, amount, date, type, category };
+  MonthYear.transactions.unshift(newTransaction);
+  SavetoStorage();
+  loadExpenseSummaryCards();
+  renderTable();
+  updateChart();
+  transactionForm.reset();
+  document.getElementById("transactionDate").value = today
+    .toISOString()
+    .split("T")[0];
+  loadCategories(TransactionTypes.INCOME);
+});
+searchInput.addEventListener("input", (e) => {
+  renderTable(e.target.value);
+});
+clearFiltersBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  renderTable();
+});
+exportCsvBtn.addEventListener("click", exportToCSV);
+document.addEventListener("DOMContentLoaded", () => {
+  loadCategories(TransactionTypes.INCOME);
+  loadExpenseSummaryCards();
+  renderTable();
+  updateChart();
+});
