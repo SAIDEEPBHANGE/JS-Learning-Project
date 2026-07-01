@@ -1,0 +1,49 @@
+body {
+  background: #f4f6f9;
+  font-family: "Segoe UI", sans-serif;
+}
+.hero {
+  height: 350px;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba");
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+.hero h1 {
+  font-size: 50px;
+  font-weight: 700;
+}
+.search-box {
+  max-width: 600px;
+  margin: auto;
+}
+.search-box .input-group {
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s;
+}
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+.card img {
+  height: 380px;
+  object-fit: cover;
+  background-color: #eaeaea;
+}
+.rating {
+  color: #ffb400;
+  font-weight: bold;
+}
