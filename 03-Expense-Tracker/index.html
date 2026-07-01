@@ -16,23 +16,24 @@
   </head>
   <body>
     <nav class="navbar navbar-dark shadow-sm mb-4">
-      <div class="container">
+      <div class="container d-flex justify-content-between align-items-center">
         <a
-          class="navbar-brand fw-bold d-flex align-items-center gap-2"
+          class="navbar-brand fw-bold d-flex align-items-center gap-2 mb-0"
           href="#"
         >
           <i class="bi bi-wallet2 fs-4 text-info"></i>
           <span>Expense Tracker</span>
         </a>
+        <select class="form-select w-auto" id="MonthSelect"></select>
       </div>
     </nav>
     <div class="container py-2">
-      <div class="row g-3 mb-4">
+      <div class="row g-3 mb-4" id="ExpenseSummaryCard">
         <div class="col-sm-6 col-md-3">
           <div class="card summary income shadow-sm">
             <div class="card-body">
               <h6>Total Income</h6>
-              <h3>₹0.00</h3>
+              <h3></h3>
             </div>
           </div>
         </div>
@@ -40,7 +41,7 @@
           <div class="card summary expense shadow-sm">
             <div class="card-body">
               <h6>Total Expense</h6>
-              <h3>₹0.00</h3>
+              <h3></h3>
             </div>
           </div>
         </div>
@@ -48,21 +49,44 @@
           <div class="card summary balance shadow-sm">
             <div class="card-body">
               <h6>Balance</h6>
-              <h3>₹0.00</h3>
+              <h3></h3>
             </div>
           </div>
         </div>
         <div class="col-sm-6 col-md-3">
           <div class="card summary budget shadow-sm">
             <div class="card-body">
-              <h6>Budget</h6>
-              <h3>₹10,000.00</h3>
+              <div class="d-flex justify-content-between align-items-center">
+                <h6>Budget</h6>
+
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  id="editBudgetBtn"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+
+              <h3 id="budgetAmount">₹10,000.00</h3>
+
+              <div
+                class="input-group input-group-sm mt-2 d-none"
+                id="budgetEditBox"
+              >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="budgetInput"
+                  placeholder="Enter budget"
+                />
+                <button class="btn btn-success" id="saveBudgetBtn">Save</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="row g-4">
-        <div class="col-lg-4">
+        <div class="col-12 col-lg-6 col-md-6">
           <div class="card shadow-sm mb-4">
             <div class="card-header">
               <h5 class="mb-0 fs-6">Add Transaction</h5>
@@ -148,6 +172,8 @@
               </form>
             </div>
           </div>
+        </div>
+        <div class="col-12 col-lg-6 col-md-6">
           <div class="card shadow-sm">
             <div class="card-header">
               <h5 class="mb-0 fs-6">Expense Breakdown</h5>
@@ -160,7 +186,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-12">
           <div class="card shadow-sm mb-4">
             <div class="card-body">
               <div class="row g-3">
