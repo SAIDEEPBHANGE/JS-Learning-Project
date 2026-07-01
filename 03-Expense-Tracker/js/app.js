@@ -33,8 +33,11 @@ function GetMonthData(key) {
     }
   );
 }
+// State tracking configs
 let expenseChartInstance = null;
-// Global UI bindings
+let currentPage = 1;
+const rowsPerPage = 5;
+// Global UI assignments
 const monthsSelected = document.querySelector("#MonthSelect");
 const transactionForm = document.getElementById("transactionForm");
 const transactionTbody = document.getElementById("TransactionTbody");
@@ -63,7 +66,7 @@ const currentYear = today.getFullYear();
 const currentMonth = today.getMonth();
 const fyStartYear = currentMonth >= 3 ? currentYear : currentYear - 1;
 let LocalStoragekey = `${currentMonth} - ${currentYear}`;
-// Populate Months Selector
+// Process Dynamic Financial Year drop down metrics
 months.forEach((m, i) => {
   const options = document.createElement("option");
   const year = i < 9 ? fyStartYear : fyStartYear + 1;
@@ -111,13 +114,26 @@ function renderTable(filterText = "") {
   const filtered = MonthYear.transactions.filter((t) =>
     t.title.toLowerCase().includes(filterText.toLowerCase()),
   );
+  const totalItems = filtered.length;
   document.getElementById("totalCountBadge").textContent =
-    `${filtered.length} total`;
-  if (filtered.length === 0) {
+    `${totalItems} total`;
+  if (totalItems === 0) {
     transactionTbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">No transactions recorded for this period.</td></tr>`;
+    document.getElementById("paginationInfo").textContent =
+      "Showing 0-0 of 0 items";
+    document.getElementById("paginationControls").innerHTML = "";
     return;
   }
-  filtered.forEach((t) => {
+  // Slicing metrics logic
+  const totalPages = Math.ceil(totalItems / rowsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = Math.min(startIndex + rowsPerPage, totalItems);
+  const paginatedItems = filtered.slice(startIndex, endIndex);
+  document.getElementById("paginationInfo").textContent =
+    `Showing ${startIndex + 1}-${endIndex} of ${totalItems} items`;
+  paginatedItems.forEach((t) => {
     const tr = document.createElement("tr");
     const isIncome = t.type === TransactionTypes.INCOME;
     const formattedDate = new Date(t.date).toLocaleDateString("en-IN");
@@ -153,6 +169,41 @@ function renderTable(filterText = "") {
       updateChart();
     });
   });
+  setupPaginationControls(totalPages, filterText);
+}
+function setupPaginationControls(totalPages, filterText) {
+  const controlsContainer = document.getElementById("paginationControls");
+  controlsContainer.innerHTML = "";
+  const prevLi = document.createElement("li");
+  prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+  prevLi.innerHTML = `<button class="page-link border-0 bg-light me-1 px-3">Prev</button>`;
+  if (currentPage > 1) {
+    prevLi.addEventListener("click", () => {
+      currentPage--;
+      renderTable(filterText);
+    });
+  }
+  controlsContainer.appendChild(prevLi);
+  for (let i = 1; i <= totalPages; i++) {
+    const pageLi = document.createElement("li");
+    pageLi.className = `page-item ${currentPage === i ? "active" : ""}`;
+    pageLi.innerHTML = `<button class="page-link border-0 me-1 px-3">${i}</button>`;
+    pageLi.addEventListener("click", () => {
+      currentPage = i;
+      renderTable(filterText);
+    });
+    controlsContainer.appendChild(pageLi);
+  }
+  const nextLi = document.createElement("li");
+  nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+  nextLi.innerHTML = `<button class="page-link border-0 bg-light px-3">Next</button>`;
+  if (currentPage < totalPages) {
+    nextLi.addEventListener("click", () => {
+      currentPage++;
+      renderTable(filterText);
+    });
+  }
+  controlsContainer.appendChild(nextLi);
 }
 function updateChart() {
   const canvas = document.getElementById("expenseChart");
@@ -171,6 +222,7 @@ function updateChart() {
     expenseChartInstance.destroy();
   }
   if (labels.length === 0) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     return;
   }
   expenseChartInstance = new Chart(ctx, {
@@ -198,11 +250,7 @@ function updateChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: "bottom",
-        },
-      },
+      plugins: { legend: { position: "bottom" } },
     },
   });
 }
@@ -211,36 +259,34 @@ function exportToCSV() {
     alert("No data available to export for this month.");
     return;
   }
-  // Define headers
   const headers = ["Title", "Category", "Type", "Amount (INR)", "Date"];
-  // Format rows
   const rows = MonthYear.transactions.map((t) => [
-    `"${t.title.replace(/"/g, '""')}"`, // escape quotes
+    `"${t.title.replace(/"/g, '""')}"`,
     `"${t.category}"`,
     `"${t.type}"`,
     t.amount.toFixed(2),
     t.date,
   ]);
-  // Combine headers and rows
   const csvContent = [headers.join(","), ...rows.map((e) => e.join(","))].join(
-    "",
+    "\n",
   );
-  // Create download link element
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  // Create descriptive filename using current month selection
-  const sanitizedKey = LocalStoragekey.replace(/ /g, "");
   link.setAttribute("href", url);
-  link.setAttribute("download", `ExpenseReport_${sanitizedKey}.csv`);
-  link.style.visibility = "hidden";
+  link.setAttribute(
+    "download",
+    `ExpenseReport_${LocalStoragekey.replace(/ /g, "")}.csv`,
+  );
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
+// Event Triggers
 monthsSelected.addEventListener("change", (e) => {
   LocalStoragekey = e.target.value;
   MonthYear = GetMonthData(LocalStoragekey);
+  currentPage = 1;
   loadExpenseSummaryCards();
   renderTable();
   updateChart();
@@ -300,9 +346,16 @@ transactionForm.addEventListener("submit", (e) => {
   const category = TypeCategory.value;
   if (!title || isNaN(amount) || amount <= 0 || !date) return;
   lastId++;
-  const newTransaction = { id: lastId, title, amount, date, type, category };
-  MonthYear.transactions.unshift(newTransaction);
+  MonthYear.transactions.unshift({
+    id: lastId,
+    title,
+    amount,
+    date,
+    type,
+    category,
+  });
   SavetoStorage();
+  currentPage = 1;
   loadExpenseSummaryCards();
   renderTable();
   updateChart();
@@ -313,10 +366,12 @@ transactionForm.addEventListener("submit", (e) => {
   loadCategories(TransactionTypes.INCOME);
 });
 searchInput.addEventListener("input", (e) => {
+  currentPage = 1;
   renderTable(e.target.value);
 });
 clearFiltersBtn.addEventListener("click", () => {
   searchInput.value = "";
+  currentPage = 1;
   renderTable();
 });
 exportCsvBtn.addEventListener("click", exportToCSV);
