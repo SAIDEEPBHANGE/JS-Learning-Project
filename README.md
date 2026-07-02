@@ -222,6 +222,8 @@ Done
 - Modular JavaScript
 - Local Storage
 
+## ![Kanban Task Board](/05-Kanban-Task-Board.jpeg)
+
 ---
 
 # 📂 Recommended Folder Structure
