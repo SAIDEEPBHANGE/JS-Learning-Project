@@ -173,22 +173,23 @@ function renderGrid(append = false) {
         : '<span class="text-muted small">No Genre</span>';
     cardsHTML += `
       <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 position-relative shadow-sm border-0 transition-all">
+        <div class="card h-100 position-relative shadow-sm border-0 rounded-4 overflow-hidden">
           <div class="position-absolute top-0 end-0 m-2 d-flex flex-column gap-1 z-2">
-            <button class="btn btn-sm blur-btn ${isFav ? "text-danger" : "text-white"}" onclick="toggleFavorite(${show.id}, event)" title="Favorite">
+            <button class="btn btn-sm btn-dark rounded-circle ${isFav ? "text-danger" : "text-white"}" onclick="toggleFavorite(${show.id}, event)" title="Favorite">
               <i class="bi ${isFav ? "bi-heart-fill" : "bi-heart"}"></i>
             </button>
-            <button class="btn btn-sm blur-btn ${isWatch ? "text-warning" : "text-white"}" onclick="toggleWatchlist(${show.id}, event)" title="Watchlist">
+            <button class="btn btn-sm btn-dark rounded-circle ${isWatch ? "text-warning" : "text-white"}" onclick="toggleWatchlist(${show.id}, event)" title="Watchlist">
               <i class="bi ${isWatch ? "bi-bookmark-dash-fill" : "bi-bookmark-dash"}"></i>
             </button>
           </div>
-          <img 
+          <div class="ratio ratio-1x1">
+          <img
             src="${show.image?.medium || "https://placehold.co/300x420?text=No+Image"}" 
             class="card-img-top object-fit-cover" 
             alt="${show.name}"
-            style="height: 320px;"
             loading="lazy"
           >
+          </div>
           <div class="card-body d-flex flex-column justify-content-between p-3">
             <div>
               <div class="d-flex justify-content-between align-items-start mb-1">
@@ -275,7 +276,7 @@ window.openDetailsModal = async function (showId) {
               <span class="text-white-50 small">${targetShow.runtime ? targetShow.runtime + " mins" : "N/A"}</span>
             </div>
             <h5 class="text-danger fw-bold mb-2">Overview</h5>
-            <div class="text-white-50 small summary-box mb-4">${cleanSummary}</div>
+            <div class="text-white-50 small mb-4">${cleanSummary}</div>
             <div class="accordion accordion-flush" id="trailerAccordion">
               <div class="accordion-item bg-transparent border-0">
                 <h2 class="accordion-header">

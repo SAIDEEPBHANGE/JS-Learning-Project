@@ -1,392 +1,84 @@
-# 🚀 Vanilla JavaScript Project Roadmap
+# JavaScript Learning Projects
 
-## 📖 About
+This repository documents a hands-on journey through vanilla JavaScript:
+building browser applications, practicing core concepts, and exploring more
+complex features one project at a time.
 
-This repository is my personal journey to mastering **Vanilla JavaScript**. The goal is to strengthen my JavaScript skills by building real-world projects, starting with beginner-friendly applications and progressing to more advanced ones.
-Each project focuses on important JavaScript concepts like DOM manipulation, asynchronous programming, APIs, local storage, and application architecture.
+## Projects
 
----
+| Project | What the current code explores |
+| --- | --- |
+| [To-Do App](./01-To-Do-App/README.md) | Task management, DOM events, local storage, and drag-and-drop |
+| [Weather Dashboard](./02-Weather-Dashboard/README.md) | Asynchronous requests, weather APIs, location, and unit switching |
+| [Expense Tracker](./03-Expense-Tracker/README.md) | Transactions, monthly summaries, local storage, charts, and CSV export |
+| [Movie Search App](./04-Movie-Search-App/README.md) | TV show search, debouncing, API data, favorites, and watchlists |
+| [Kanban Task Board](./05-Kanban-Task-Board/README.md) | Task cards, a modal form, persistent state, and drag-and-drop |
 
-# 📚 Projects
+Each project README contains its current features, limitations, and a place
+to add screenshots. See the [JavaScript roadmap](./JS-Road-Map/README.md)
+for topics to explore beyond these projects.
 
-## 1. ✅ To-Do App
+## JavaScript concepts practiced
 
-### Difficulty
+- Variables, functions, arrays, objects, and modern JavaScript syntax
+- DOM manipulation, event handling, form input, and dynamic rendering
+- CRUD operations, application state, browser local storage, and JSON
+- Fetch, promises, async/await, external APIs, and error handling
+- Search, filtering, pagination, drag-and-drop, and browser geolocation
 
-⭐ Beginner → ⭐⭐ Intermediate
+The roadmap also includes topics that are goals for future study; its contents
+should not be interpreted as a checklist of completed achievements.
 
-### Description
+## Running the projects
 
-A task management application where users can create, edit, delete, search, and organize their daily tasks.
+Serve the repository directory with a local web server. For example, with
+Python installed, run:
 
-### Features
-
-- Add task
-- Edit task
-- Delete task
-- Mark as completed
-- Search tasks
-- Filter tasks
-  - All
-  - Active
-  - Completed
-- Store tasks in Local Storage
-
-### Bonus Features
-
-- Drag & Drop
-- Due Dates
-- Categories
-- Dark Mode
-
-### Concepts Practiced
-
-- DOM Manipulation
-- Event Listeners
-- Arrays
-- Objects
-- Local Storage
-- Event Delegation
-- CRUD Operations
-
-## ![To-Do App](/01-To-Do-App.png)
-
-## 2. 🌦 Weather Dashboard
-
-### Difficulty
-
-⭐⭐⭐ Intermediate
-
-### Description
-
-A weather application that displays current weather conditions and forecasts using a public weather API.
-
-### Features
-
-- Search by city
-- Current weather
-- 5-Day Forecast
-- Weather icons
-- Celsius/Fahrenheit switch
-- Recent searches
-- Detect current location
-
-### Bonus Features
-
-- Air Quality Index
-- UV Index
-- Sunrise & Sunset
-- Dynamic backgrounds
-
-### Concepts Practiced
-
-- Fetch API
-- Async/Await
-- JSON
-- Error Handling
-- Loading States
-- Browser Geolocation API
-
-## ![Weather Dashboard](/02-Weather-Dashboard.png)
-
----
-
-## 3. 💰 Expense Tracker
-
-### Difficulty
-
-⭐⭐⭐⭐ Intermediate+
-
-### Description
-
-A finance tracker to manage income and expenses while displaying reports and balance summaries.
-
-### Features
-
-- Add income
-- Add expenses
-- Edit records
-- Delete records
-- Categories
-- Monthly summary
-- Search transactions
-- Save data locally
-
-### Bonus Features
-
-- CSV Export
-- Pie Charts
-- Budget Alerts
-- Monthly Reports
-
-### Concepts Practiced
-
-- Objects
-- Arrays
-- Local Storage
-- Modular JavaScript
-- Data Filtering
-- Basic Data Visualization
-
-## ![Expense Tracker](/03-Expense-Tracker.png)
-
----
-
-## 4. 🎬 Movie Search App
-
-### Difficulty
-
-⭐⭐⭐⭐ Intermediate → Advanced
-
-### Description
-
-A movie browser that searches movie information from an external API.
-
-### Features
-
-- Search movies
-- Movie details
-- Ratings
-- Release year
-- Favorites
-- Watchlist
-- Infinite scrolling
-- Pagination
-
-### Bonus Features
-
-- Trailer popup
-- Genre filters
-- Trending movies
-- User authentication
-
-### Concepts Practiced
-
-- API Integration
-- Debouncing
-- Dynamic Rendering
-- Async/Await
-- State Management
-- Search Optimization
-
-## ![Movie Search App](/04-Movie-Search-App.png)
-
----
-
-## 5. 📋 Kanban Task Board
-
-### Difficulty
-
-⭐⭐⭐⭐⭐ Advanced
-
-### Description
-
-A Trello-style task management application with drag-and-drop functionality.
-
-### Board Structure
-
-```text
-Todo
-   ↓
-In Progress
-   ↓
-Testing
-   ↓
-Done
+```sh
+python -m http.server 8000
 ```
 
-### Features
+Open `http://localhost:8000/` and select a project directory, or visit its
+`index.html` directly through the server. An internet connection is needed
+for the CDN dependencies and the weather and TV-show APIs. Geolocation may
+require browser permission and a secure context; localhost is normally
+treated as secure.
 
-- Create task cards
-- Edit cards
-- Delete cards
-- Drag & Drop cards
-- Priority labels
-- Due dates
-- Auto-save
-- Multiple columns
-
-### Bonus Features
-
-- Search
-- Filters
-- Multiple boards
-- Team members
-- Activity history
-
-### Concepts Practiced
-
-- Drag & Drop API
-- Complex DOM Manipulation
-- State Management
-- Modular JavaScript
-- Local Storage
-
-## ![Kanban Task Board](/05-Kanban-Task-Board.jpeg)
-
----
-
-# 📂 Recommended Folder Structure
+## Structure
 
 ```text
-project-name/
-│
-├── index.html
+JS-Learning-Project/
 ├── README.md
-│
-├── css/
-│   ├── style.css
-│   └── responsive.css
-│
-├── js/
-│   ├── app.js
-│   ├── storage.js
-│   ├── ui.js
-│   ├── api.js
-│   └── utils.js
-│
-├── assets/
-│   ├── images/
-│   └── icons/
-│
-└── data/
+├── JS-Road-Map/
+│   └── README.md
+└── <project>/
+    ├── README.md
+    ├── index.html
+    └── js/
+        ├── README.md
+        └── app.js
 ```
 
----
+The five project directories follow this layout. Images may be added to their
+project directories later.
 
-# 🧠 JavaScript Skills Covered
+## Built with
 
-- Variables
-- Data Types
-- Operators
-- Functions
-- Scope
-- Arrays
-- Objects
-- Loops
-- Conditionals
-- ES6 Features
-- Template Literals
-- Destructuring
-- Spread Operator
-- Rest Parameters
-- Arrow Functions
-- Modules
-- DOM Manipulation
-- Event Handling
-- Event Delegation
-- Local Storage
-- Session Storage
-- Fetch API
-- Async/Await
-- Promises
-- JSON
-- Error Handling
-- CRUD Operations
-- Form Validation
-- Search & Filter
-- Sorting
-- Drag & Drop
-- Responsive Design
-- Browser APIs
-- API Integration
-- Code Organization
+- HTML5 and vanilla JavaScript
+- Bootstrap 5 and Bootstrap Icons, loaded from a CDN
+- Chart.js for the expense tracker
+- Open-Meteo and OpenStreetMap Nominatim for weather and location
+- TVMaze for show data
 
----
+The projects use Bootstrap classes rather than custom CSS. They are learning
+projects, not production applications.
 
-# 🛣 Learning Roadmap
+## Goals and future learning
 
-```text
-JavaScript Basics
-        │
-        ▼
-DOM Manipulation
-        │
-        ▼
-Events
-        │
-        ▼
-Forms & Validation
-        │
-        ▼
-Local Storage
-        │
-        ▼
-Fetch API
-        │
-        ▼
-Promises
-        │
-        ▼
-Async/Await
-        │
-        ▼
-CRUD Applications
-        │
-        ▼
-REST APIs
-        │
-        ▼
-State Management
-        │
-        ▼
-Complex Applications
-        │
-        ▼
-JavaScript Expert 🚀
-```
+Continue improving JavaScript fluency, debugging, accessibility, responsive
+interfaces, application organization, and browser API usage. Potential next
+topics include TypeScript, React, Node.js, and server-side development.
 
----
+## Author
 
-# 🎯 Goals
-
-- Build 5 complete JavaScript projects
-- Write clean and maintainable code
-- Learn modular project structure
-- Practice real-world problem solving
-- Improve debugging skills
-- Understand browser APIs
-- Become comfortable building projects without frameworks
-
----
-
-# 📖 What I'll Learn
-
-By completing these projects, I will gain experience with:
-
-- Building interactive user interfaces
-- Working with browser storage
-- Consuming REST APIs
-- Handling asynchronous code
-- Organizing JavaScript into modules
-- Writing reusable functions
-- Managing application state
-- Improving code readability and maintainability
-
----
-
-# 🛠 Built With
-
-- HTML5
-- CSS3
-- Vanilla JavaScript (ES6+)
-
----
-
-# 🚀 Future Projects
-
-After mastering these projects, the next step is to learn:
-
-- React
-- TypeScript
-- Node.js
-- Express.js
-- MongoDB
-- Next.js
-
----
-
-# 👨‍💻 Author
-
-**Saideep Arvind Bhange**
-Learning JavaScript one project at a time 🚀
+Saideep Arvind Bhange

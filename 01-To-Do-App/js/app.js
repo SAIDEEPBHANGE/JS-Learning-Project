@@ -217,21 +217,24 @@ let draggedRow = null;
 function addDragEvents(row) {
   row.addEventListener("dragstart", () => {
     draggedRow = row;
-    row.classList.add("dragging");
+    row.classList.add("opacity-50");
   });
   row.addEventListener("dragend", () => {
-    row.classList.remove("dragging");
+    row.classList.remove("opacity-50");
     draggedRow = null;
-    tbody.querySelectorAll("tr").forEach((r) => r.classList.remove("over"));
+    tbody
+      .querySelectorAll("tr")
+      .forEach((r) => r.classList.remove("border-top", "border-primary", "border-3"));
   });
   row.addEventListener("dragover", (e) => {
     e.preventDefault();
   });
   row.addEventListener("dragenter", () => {
-    if (row !== draggedRow) row.classList.add("over");
+    if (row !== draggedRow)
+      row.classList.add("border-top", "border-primary", "border-3");
   });
   row.addEventListener("dragleave", () => {
-    row.classList.remove("over");
+    row.classList.remove("border-top", "border-primary", "border-3");
   });
   row.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -243,7 +246,7 @@ function addDragEvents(row) {
       Tasks = newOrderedIds.map((id) => Tasks.find((t) => t.Id === id));
       saveToStorage();
     }
-    row.classList.remove("over");
+    row.classList.remove("border-top", "border-primary", "border-3");
   });
 }
 // Initial Table Render

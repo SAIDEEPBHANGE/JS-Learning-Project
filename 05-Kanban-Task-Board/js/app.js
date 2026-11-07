@@ -191,7 +191,7 @@ function renderBoard() {
       <div class="card border-0 shadow-sm mb-2 task-card" draggable="true" ondragstart="drag(event)" id="${task.id}">
         <div class="card-body p-3">
           <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="badge ${badgeClass} text-uppercase" style="font-size: 0.65rem;">${task.priority}</span>
+            <span class="badge ${badgeClass} text-uppercase">${task.priority}</span>
             <div class="dropdown">
               <button class="btn p-0 text-muted" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-three-dots-vertical"></i>
@@ -214,7 +214,7 @@ function renderBoard() {
           <p class="text-muted small mb-3">${task.desc || "No description provided."}</p>
           <div class="d-flex justify-content-between align-items-center border-top pt-2">
             <span class="text-muted small"><i class="bi bi-calendar-event me-1"></i> ${displayDate}</span>
-            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 10px; font-weight: bold;">
+            <div class="badge bg-primary text-white rounded-circle p-2">
               ${task.assignee}
             </div>
           </div>
