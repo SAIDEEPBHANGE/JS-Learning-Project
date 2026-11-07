@@ -14,8 +14,8 @@ complex features one project at a time.
 | [Movie Search App](./04-Movie-Search-App/README.md) | TV show search, debouncing, API data, favorites, and watchlists |
 | [Kanban Task Board](./05-Kanban-Task-Board/README.md) | Task cards, a modal form, persistent state, and drag-and-drop |
 
-Each project README contains its current features, limitations, and a place
-to add screenshots. See the [JavaScript roadmap](./JS-Road-Map/README.md)
+Each project README contains its current features, limitations, function-flow
+diagrams, and a screenshot placeholder. See the [JavaScript roadmap](./JS-Road-Map/README.md)
 for topics to explore beyond these projects.
 
 ## JavaScript concepts practiced
@@ -55,12 +55,11 @@ JS-Learning-Project/
     ├── README.md
     ├── index.html
     └── js/
-        ├── README.md
         └── app.js
 ```
 
-The five project directories follow this layout. Images may be added to their
-project directories later.
+The five project directories follow this layout. Add `image.png` to each
+project directory to display its screenshot in the project README.
 
 ## Built with
 

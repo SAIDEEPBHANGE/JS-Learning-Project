@@ -18,6 +18,36 @@ presentational; they do not manage separate boards or filter tasks.
 DOM rendering, event delegation, forms, Bootstrap modals, local storage,
 application state, and HTML drag-and-drop.
 
+## Function flow
+
+The diagram follows the main paths in [`js/app.js`](./js/app.js).
+Dashed arrows represent later user or browser events.
+
+```mermaid
+flowchart TD
+    Start["DOMContentLoaded"] --> Board["renderBoard"]
+    Start --> Setup["setupEventListeners"]
+    Board --> Counts["updateCounters"]
+    Setup -.->|modal opened| Modal["Modal show handler"]
+    Modal --> Form["Populate or reset task form"]
+    Setup -.->|form submitted| Submit["Task form submit handler"]
+    Submit --> Change["Create or update task state"]
+    Change --> Save["saveState"]
+    Change --> Board
+    Setup -.->|delete confirmed| Delete["deleteTask"]
+    Delete --> Save
+    Delete --> Board
+    Board -.->|drag starts| Drag["drag"]
+    Drag --> Transfer["Store task ID in dataTransfer"]
+    Over["Drag over column"] --> Allow["allowDrop"]
+    DropEvent["Drop on column"] --> Drop["drop"]
+    Drop -->|valid column| Save
+    Drop -->|valid column| Board
+```
+
+`renderBoard` rebuilds cards from the saved state and updates the counts.
+The modal and drop handlers update state before saving and rendering again.
+
 ## Run
 
 Follow the [repository setup](../README.md#running-the-projects) and open
@@ -26,4 +56,6 @@ internet connection. Board data stays in the current browser's local storage.
 
 ## Screenshot
 
-Add a project screenshot here later.
+Add `image.png` to this project folder to display the screenshot below.
+
+![Kanban Task Board screenshot](./image.png)

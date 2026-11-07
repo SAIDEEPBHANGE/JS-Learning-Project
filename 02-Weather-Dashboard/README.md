@@ -15,6 +15,34 @@ Look up weather and practice combining asynchronous browser API requests.
 Fetch, async/await, JSON, error handling, DOM updates, local storage, and
 geolocation.
 
+## Function flow
+
+The diagram follows the main paths in [`js/app.js`](./js/app.js).
+Dashed arrows represent later user events, not direct function calls.
+
+```mermaid
+flowchart TD
+    Start["DOMContentLoaded"] --> Recent["renderRecentSearches"]
+    Search["Search click or Enter"] --> Fetch["fetchWeatherDashboard"]
+    Recent -.->|recent search clicked| Fetch
+    Unit["Unit change"] --> ReFetch["reFetchCurrent"]
+    ReFetch -->|current search exists| Fetch
+    Geo["Location button"] --> Location["Geolocation and reverse geocoding"]
+    Location -->|location or fallback coordinates| Fetch
+    Fetch --> Coordinates["getCoordinates"]
+    Coordinates --> Nominatim["Nominatim search"]
+    Fetch -->|when updating history| History["addHistoryItem"]
+    History -->|new item| Recent
+    Fetch --> Requests["Fetch weather and air quality in parallel"]
+    Requests --> Display["displayWeatherData"]
+    Display --> Background["updateBackground"]
+    Display --> UV["getUvLabel"]
+    Display --> AQI["getAqiLabel"]
+    Fetch -->|request error| Error["Show error and hide weather"]
+```
+
+`displayWeatherData` also renders the current conditions and forecast.
+
 ## Run and dependencies
 
 Follow the [repository setup](../README.md#running-the-projects) and open
@@ -25,4 +53,6 @@ requires browser permission and a secure context.
 
 ## Screenshot
 
-Add a project screenshot here later.
+Add `image.png` to this project folder to display the screenshot below.
+
+![Weather Dashboard screenshot](./image.png)

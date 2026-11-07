@@ -17,6 +17,45 @@ The current interface does not edit existing transactions.
 Form handling, arrays and objects, filtering, local storage, pagination,
 chart data, and CSV generation.
 
+## Function flow
+
+The diagram summarizes the main calls in [`js/app.js`](./js/app.js).
+Dashed arrows represent callbacks triggered by later user actions.
+
+```mermaid
+flowchart TD
+    Start["Initialization"] --> Get["GetMonthData"]
+    Start --> Categories["loadCategories"]
+    Start --> Summary["loadExpenseSummaryCards"]
+    Start --> Table["renderTable"]
+    Start --> Chart["updateChart"]
+    Summary --> Totals["recalculateTotals"]
+    Table -->|when transactions exist| Pagination["setupPaginationControls"]
+    Pagination -.->|page clicked| Table
+    Table -.->|delete clicked| Delete["Delete handler"]
+    Delete --> Save["SavetoStorage"]
+    Delete --> Summary
+    Delete --> Table
+    Delete --> Chart
+    Submit["Transaction submit handler"] -->|valid transaction| Save
+    Submit -->|valid transaction| Summary
+    Submit -->|valid transaction| Table
+    Submit -->|valid transaction| Chart
+    Submit -->|form reset| Categories
+    Month["Month change handler"] --> Get
+    Month --> Summary
+    Month --> Table
+    Month --> Chart
+    Budget["Save budget handler"] -->|valid budget| Save
+    Budget -->|valid budget| Summary
+    Search["Search or clear filter"] --> Table
+    Type["Transaction type change"] --> Categories
+    Export["Export button"] --> CSV["exportToCSV"]
+```
+
+The summary recalculates totals, while the chart groups expenses by category.
+The export function builds a CSV from the selected month's transactions.
+
 ## Run and dependencies
 
 Follow the [repository setup](../README.md#running-the-projects) and open
@@ -26,4 +65,6 @@ browser's local storage.
 
 ## Screenshot
 
-Add a project screenshot here later.
+Add `image.png` to this project folder to display the screenshot below.
+
+![Expense Tracker screenshot](./image.png)
